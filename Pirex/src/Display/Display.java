@@ -38,6 +38,8 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
 import javax.swing.DropMode;
+import javax.swing.UIManager;
+import javax.swing.border.BevelBorder;
 
 public class Display {
 
@@ -47,6 +49,11 @@ public class Display {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		try {
+			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -76,14 +83,14 @@ public class Display {
 		frmPirex.getContentPane().setBackground(Color.WHITE);
 		frmPirex.setBackground(new Color(0, 0, 0));
 		frmPirex.setForeground(Color.WHITE);
-		frmPirex.setBounds(100, 100, 896, 553);
+		frmPirex.setBounds(100, 100, 811, 553);
 		frmPirex.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmPirex.getContentPane().setLayout(null);
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBackground(Color.WHITE);
 		tabbedPane.setBorder(new EmptyBorder(0, 0, 0, 0));
-		tabbedPane.setBounds(0, 0, 875, 800);
+		tabbedPane.setBounds(0, 0, 797, 800);
 		frmPirex.getContentPane().add(tabbedPane);
 		
 		JPanel welcome = new JPanel();
@@ -98,7 +105,7 @@ public class Display {
 		JTextPane welcomeText = new JTextPane();
 		welcomeText.setFont(new Font("Trebuchet MS", Font.BOLD, 30));
 		welcomeText.setText("                      Welcome to Pirex\r\nPlease click on one of the tabs above to begin");
-		welcomeText.setBounds(102, 185, 697, 247);
+		welcomeText.setBounds(69, 179, 650, 97);
 		welcome.add(welcomeText);
 		
 		JPanel help = new JPanel();

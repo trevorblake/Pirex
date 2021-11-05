@@ -38,6 +38,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
 import javax.swing.DropMode;
+import javax.swing.JTextField;
 
 public class Display {
 
@@ -86,6 +87,7 @@ public class Display {
 		tabbedPane.setBounds(0, 0, 875, 800);
 		frmPirex.getContentPane().add(tabbedPane);
 		
+		// Code for "Welcome Page"
 		JPanel welcome = new JPanel();
 		welcome.setBorder(null);
 		welcome.setBackground(Color.WHITE);
@@ -101,6 +103,7 @@ public class Display {
 		welcomeText.setBounds(102, 185, 697, 247);
 		welcome.add(welcomeText);
 		
+		// Code for "Help Page"
 		JPanel help = new JPanel();
 		help.setForeground(Color.WHITE);
 		help.setBorder(null);
@@ -111,6 +114,7 @@ public class Display {
 		help.setLayout(new GridLayout(1, 0, 0, 0));
 		tabbedPane.setBackgroundAt(1, Color.WHITE);
 		
+		// Code for " Summarize Documents" page
 		JPanel summarize = new JPanel();
 		summarize.setForeground(Color.WHITE);
 		summarize.setBorder(null);
@@ -119,6 +123,7 @@ public class Display {
 		tabbedPane.setBackgroundAt(2, Color.WHITE);
 		summarize.setLayout(new GridLayout(1, 0, 0, 0));
 		
+		//Code for "Load Documents" page
 		JPanel load = new JPanel();
 		load.setForeground(Color.WHITE);
 		load.setBorder(null);
@@ -127,6 +132,7 @@ public class Display {
 		tabbedPane.setBackgroundAt(3, Color.WHITE);
 		load.setLayout(new GridLayout(1, 0, 0, 0));
 		
+		//Code for "Summarize Documents" page
 		JPanel search = new JPanel();
 		search.setForeground(Color.WHITE);
 		search.setBorder(null);

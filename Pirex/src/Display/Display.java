@@ -38,12 +38,19 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
 import javax.swing.DropMode;
+
 import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
+
+import javax.swing.JTextField;
+import javax.swing.JButton;
+import javax.swing.LayoutStyle.ComponentPlacement;
+
 
 public class Display {
 
 	private JFrame frmPirex;
+	private JTextField textField;
 
 	/**
 	 * Launch the application.
@@ -78,7 +85,6 @@ public class Display {
 	 */
 	private void initialize() {
 		frmPirex = new JFrame();
-		frmPirex.setResizable(false);
 		frmPirex.setIconImage(Toolkit.getDefaultToolkit().getImage("images/p.png"));
 		frmPirex.getContentPane().setBackground(Color.WHITE);
 		frmPirex.setBackground(new Color(0, 0, 0));
@@ -90,10 +96,14 @@ public class Display {
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBackground(Color.WHITE);
 		tabbedPane.setBorder(new EmptyBorder(0, 0, 0, 0));
+
 		tabbedPane.setBounds(0, 0, 797, 800);
+
+		tabbedPane.setBounds(0, 0, 880, 802);
+
 		frmPirex.getContentPane().add(tabbedPane);
 		
-		// Code for "Welcome Page"
+// Code for "Welcome Page"
 		JPanel welcome = new JPanel();
 		welcome.setBorder(null);
 		welcome.setBackground(Color.WHITE);
@@ -109,17 +119,65 @@ public class Display {
 		welcomeText.setBounds(69, 179, 650, 97);
 		welcome.add(welcomeText);
 		
+
+// Code for "Help Page"
+
 		JPanel help = new JPanel();
 		help.setForeground(Color.WHITE);
 		help.setBorder(null);
 		help.setBackground(Color.WHITE);
-		tabbedPane.addTab("", new ImageIcon("images/help iconr.png"), help, "Need Help?");
+		tabbedPane.addTab("Help", new ImageIcon("images/help iconr.png"), help, "Need Help?");
 		tabbedPane.setEnabledAt(1, true);
 		tabbedPane.setDisabledIconAt(1, new ImageIcon("images/help icong.jpg"));
-		help.setLayout(new GridLayout(1, 0, 0, 0));
+		
+		textField = new JTextField();
+		textField.setColumns(10);
+		
+		JButton btnNewButton = new JButton("Search Topics");
+		
+		JTextPane txtpnEnterTheTopic = new JTextPane();
+		txtpnEnterTheTopic.setText("Enter the topic you would like help with:");
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+		GroupLayout gl_help = new GroupLayout(help);
+		gl_help.setHorizontalGroup(
+			gl_help.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_help.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_help.createParallelGroup(Alignment.TRAILING)
+						.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 761, GroupLayout.PREFERRED_SIZE)
+						.addGroup(gl_help.createSequentialGroup()
+							.addGap(26)
+							.addComponent(txtpnEnterTheTopic, GroupLayout.PREFERRED_SIZE, 149, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(textField, GroupLayout.PREFERRED_SIZE, 474, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
+							.addComponent(btnNewButton)))
+					.addGap(49))
+		);
+		gl_help.setVerticalGroup(
+			gl_help.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_help.createSequentialGroup()
+					.addGap(34)
+					.addGroup(gl_help.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_help.createSequentialGroup()
+							.addGroup(gl_help.createParallelGroup(Alignment.BASELINE)
+								.addComponent(textField, GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE)
+								.addComponent(btnNewButton))
+							.addGap(187))
+						.addGroup(gl_help.createSequentialGroup()
+							.addComponent(txtpnEnterTheTopic, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)))
+					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 198, GroupLayout.PREFERRED_SIZE)
+					.addGap(319))
+		);
+		help.setLayout(gl_help);
 		tabbedPane.setBackgroundAt(1, Color.WHITE);
 		
-		// Code for "Summarize Documents" page
+
+// Code for " Summarize Documents" page
+
 		JPanel summarize = new JPanel();
 		summarize.setForeground(Color.WHITE);
 		summarize.setBorder(null);
@@ -128,7 +186,9 @@ public class Display {
 		tabbedPane.setBackgroundAt(2, Color.WHITE);
 		summarize.setLayout(new GridLayout(1, 0, 0, 0));
 		
-		// Code for "Load Documents" page
+
+//Code for "Load Documents" page
+
 		JPanel load = new JPanel();
 		load.setForeground(Color.WHITE);
 		load.setBorder(null);
@@ -137,7 +197,9 @@ public class Display {
 		tabbedPane.setBackgroundAt(3, Color.WHITE);
 		load.setLayout(new GridLayout(1, 0, 0, 0));
 		
-		// Code for "Search" page
+
+//Code for "Summarize Documents" page
+
 		JPanel search = new JPanel();
 		search.setForeground(Color.WHITE);
 		search.setBorder(null);

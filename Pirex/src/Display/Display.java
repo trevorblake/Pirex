@@ -45,6 +45,7 @@ import javax.swing.border.BevelBorder;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.border.LineBorder;
 
 
 public class Display {
@@ -85,11 +86,12 @@ public class Display {
 	 */
 	private void initialize() {
 		frmPirex = new JFrame();
+		frmPirex.setResizable(false);
 		frmPirex.setIconImage(Toolkit.getDefaultToolkit().getImage("images/p.png"));
 		frmPirex.getContentPane().setBackground(Color.WHITE);
 		frmPirex.setBackground(new Color(0, 0, 0));
 		frmPirex.setForeground(Color.WHITE);
-		frmPirex.setBounds(100, 100, 811, 553);
+		frmPirex.setBounds(100, 100, 896, 798);
 		frmPirex.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmPirex.getContentPane().setLayout(null);
 		
@@ -119,93 +121,97 @@ public class Display {
 		welcomeText.setBounds(69, 179, 650, 97);
 		welcome.add(welcomeText);
 		
-
-// Code for "Help Page"
-
-		JPanel help = new JPanel();
-		help.setForeground(Color.WHITE);
-		help.setBorder(null);
-		help.setBackground(Color.WHITE);
-		tabbedPane.addTab("Help", new ImageIcon("images/help iconr.png"), help, "Need Help?");
-		tabbedPane.setEnabledAt(1, true);
-		tabbedPane.setDisabledIconAt(1, new ImageIcon("images/help icong.jpg"));
-		
-		textField = new JTextField();
-		textField.setColumns(10);
-		
-		JButton btnNewButton = new JButton("Search Topics");
-		
-		JTextPane txtpnEnterTheTopic = new JTextPane();
-		txtpnEnterTheTopic.setText("Enter the topic you would like help with:");
-		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-		GroupLayout gl_help = new GroupLayout(help);
-		gl_help.setHorizontalGroup(
-			gl_help.createParallelGroup(Alignment.TRAILING)
-				.addGroup(gl_help.createSequentialGroup()
-					.addContainerGap()
-					.addGroup(gl_help.createParallelGroup(Alignment.TRAILING)
-						.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 761, GroupLayout.PREFERRED_SIZE)
-						.addGroup(gl_help.createSequentialGroup()
-							.addGap(26)
-							.addComponent(txtpnEnterTheTopic, GroupLayout.PREFERRED_SIZE, 149, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addComponent(textField, GroupLayout.PREFERRED_SIZE, 474, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
-							.addComponent(btnNewButton)))
-					.addGap(49))
-		);
-		gl_help.setVerticalGroup(
-			gl_help.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_help.createSequentialGroup()
-					.addGap(34)
-					.addGroup(gl_help.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_help.createSequentialGroup()
-							.addGroup(gl_help.createParallelGroup(Alignment.BASELINE)
-								.addComponent(textField, GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE)
-								.addComponent(btnNewButton))
-							.addGap(187))
-						.addGroup(gl_help.createSequentialGroup()
-							.addComponent(txtpnEnterTheTopic, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED)))
-					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 198, GroupLayout.PREFERRED_SIZE)
-					.addGap(319))
-		);
-		help.setLayout(gl_help);
-		tabbedPane.setBackgroundAt(1, Color.WHITE);
-		
-
-// Code for " Summarize Documents" page
+		// Code for " Summarize Documents" page
 
 		JPanel summarize = new JPanel();
 		summarize.setForeground(Color.WHITE);
 		summarize.setBorder(null);
 		summarize.setBackground(Color.WHITE);
 		tabbedPane.addTab("", new ImageIcon("images/summ iconr1.png"), summarize, "Summarized Document View");
-		tabbedPane.setBackgroundAt(2, Color.WHITE);
+		tabbedPane.setBackgroundAt(1, Color.WHITE);
 		summarize.setLayout(new GridLayout(1, 0, 0, 0));
 		
-
-//Code for "Load Documents" page
+		//Code for "Load Documents" page
 
 		JPanel load = new JPanel();
 		load.setForeground(Color.WHITE);
 		load.setBorder(null);
 		load.setBackground(Color.WHITE);
 		tabbedPane.addTab("", new ImageIcon("images/ld iconr.png"), load, "Load Documents Section");
-		tabbedPane.setBackgroundAt(3, Color.WHITE);
+		tabbedPane.setBackgroundAt(2, Color.WHITE);
 		load.setLayout(new GridLayout(1, 0, 0, 0));
 		
-
-//Code for "Summarize Documents" page
+		//Code for "Search Documents" page
 
 		JPanel search = new JPanel();
 		search.setForeground(Color.WHITE);
 		search.setBorder(null);
 		search.setBackground(Color.WHITE);
 		tabbedPane.addTab("", new ImageIcon("images/sea iconr.png"), search, "Search For Documents");
-		tabbedPane.setBackgroundAt(4, Color.WHITE);
+		tabbedPane.setBackgroundAt(3, Color.WHITE);
 		search.setLayout(new GridLayout(1, 0, 0, 0));
+
+
+						
+
+		
+		// Code for "Help Page"
+
+		JPanel help = new JPanel();
+		help.setForeground(Color.WHITE);
+		help.setBorder(null);
+		help.setBackground(Color.WHITE);
+		tabbedPane.addTab("", new ImageIcon("images/help iconr.png"), help, "Need Help?");
+		tabbedPane.setEnabledAt(4, true);
+		tabbedPane.setDisabledIconAt(4, new ImageIcon("images/help icong.jpg"));
+		tabbedPane.setBackgroundAt(4, Color.WHITE);
+		
+		textField = new JTextField();
+		textField.setColumns(10);
+		
+		JButton btnNewButton = new JButton("Search Topics");
+		btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 13));
+		
+		JTextPane txtpnEnterTheTopic = new JTextPane();
+		txtpnEnterTheTopic.setFont(new Font("Tahoma", Font.BOLD, 13));
+		txtpnEnterTheTopic.setText("Enter the topic you would like help with:");
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setViewportBorder(new LineBorder(new Color(0, 0, 0), 2, true));
+		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		GroupLayout gl_help = new GroupLayout(help);
+		gl_help.setHorizontalGroup(
+			gl_help.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_help.createSequentialGroup()
+					.addGroup(gl_help.createParallelGroup(Alignment.TRAILING)
+						.addGroup(Alignment.LEADING, gl_help.createSequentialGroup()
+							.addGap(45)
+							.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 781, Short.MAX_VALUE))
+						.addGroup(Alignment.LEADING, gl_help.createSequentialGroup()
+							.addGap(26)
+							.addComponent(txtpnEnterTheTopic, GroupLayout.PREFERRED_SIZE, 149, GroupLayout.PREFERRED_SIZE)
+							.addGap(32)
+							.addComponent(textField, GroupLayout.PREFERRED_SIZE, 474, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
+							.addComponent(btnNewButton)))
+					.addGap(49))
+		);
+		gl_help.setVerticalGroup(
+			gl_help.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_help.createSequentialGroup()
+					.addGap(58)
+					.addGroup(gl_help.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_help.createParallelGroup(Alignment.BASELINE)
+							.addComponent(textField, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
+							.addComponent(btnNewButton))
+						.addComponent(txtpnEnterTheTopic, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(276)
+					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 268, GroupLayout.PREFERRED_SIZE)
+					.addGap(135))
+		);
+		help.setLayout(gl_help);
+		
+
 	}
 }

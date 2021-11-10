@@ -127,22 +127,33 @@ public class Display {
 		
 // Code for " Summarize Documents" page
 
-		JPanel summarize = new JPanel();
+		Jpanel summarize = new JPanel();
 		summarize.setForeground(Color.WHITE);
 		summarize.setBorder(null);
 		summarize.setBackground(Color.WHITE);
 		tabbedPane.addTab("", new ImageIcon("images/summ iconr1.png"), summarize, "Summarized Document View");
 		tabbedPane.setBackgroundAt(1, Color.WHITE);
-		summarize.setLayout(new GridLayout(1, 0, 0, 0));
 		
 		JScrollPane summarizeScrollPane = new JScrollPane();
+		summarizeScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		summarizeScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		summarizeScrollPane.setViewportBorder(new LineBorder(new Color(0, 0, 0), 3));
-		summarize.add(summarizeScrollPane);
-		
-		JTextArea summarizeTextArea = new JTextArea();
-		summarizeTextArea.setForeground(Color.WHITE);
-		summarizeScrollPane.setViewportView(summarizeTextArea);
+		summarizeScrollPane.setViewportBorder(new LineBorder(new Color(0, 0, 0), 4));
+		GroupLayout gl_summarize = new GroupLayout(summarize);
+		gl_summarize.setHorizontalGroup(
+			gl_summarize.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_summarize.createSequentialGroup()
+					.addGap(22)
+					.addComponent(summarizeScrollPane, GroupLayout.PREFERRED_SIZE, 827, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(26, Short.MAX_VALUE))
+		);
+		gl_summarize.setVerticalGroup(
+			gl_summarize.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_summarize.createSequentialGroup()
+					.addGap(77)
+					.addComponent(summarizeScrollPane, GroupLayout.PREFERRED_SIZE, 626, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(71, Short.MAX_VALUE))
+		);
+		summarize.setLayout(gl_summarize);
 		
 		//Code for "Load Documents" page
 

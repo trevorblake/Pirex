@@ -46,6 +46,10 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.LineBorder;
+import javax.swing.JList;
+import javax.swing.AbstractListModel;
+import javax.swing.ListSelectionModel;
+import java.awt.Panel;
 
 
 public class Display {
@@ -121,7 +125,7 @@ public class Display {
 		welcomeText.setBounds(69, 179, 650, 97);
 		welcome.add(welcomeText);
 		
-		// Code for " Summarize Documents" page
+// Code for " Summarize Documents" page
 
 		JPanel summarize = new JPanel();
 		summarize.setForeground(Color.WHITE);
@@ -131,7 +135,7 @@ public class Display {
 		tabbedPane.setBackgroundAt(1, Color.WHITE);
 		summarize.setLayout(new GridLayout(1, 0, 0, 0));
 		
-		//Code for "Load Documents" page
+//Code for "Load Documents" page
 
 		JPanel load = new JPanel();
 		load.setForeground(Color.WHITE);
@@ -141,7 +145,7 @@ public class Display {
 		tabbedPane.setBackgroundAt(2, Color.WHITE);
 		load.setLayout(new GridLayout(1, 0, 0, 0));
 		
-		//Code for "Search Documents" page
+//Code for "Search Documents" page
 
 		JPanel search = new JPanel();
 		search.setForeground(Color.WHITE);
@@ -155,7 +159,7 @@ public class Display {
 						
 
 		
-		// Code for "Help Page"
+// Code for "Help Page"
 
 		JPanel help = new JPanel();
 		help.setForeground(Color.WHITE);
@@ -169,26 +173,45 @@ public class Display {
 		textField = new JTextField();
 		textField.setColumns(10);
 		
+		//"Search" button next to fillable text box
 		JButton btnNewButton = new JButton("Search Topics");
 		btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 13));
 		
+		//Label next to fillable text box
 		JTextPane txtpnEnterTheTopic = new JTextPane();
 		txtpnEnterTheTopic.setFont(new Font("Tahoma", Font.BOLD, 13));
 		txtpnEnterTheTopic.setText("Enter the topic you would like help with:");
 		
+		//Scroll pane that displays search topic results when "Search Topics" button is clicked
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setViewportBorder(new LineBorder(new Color(0, 0, 0), 2, true));
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		
+		//Will become hyperlink that opens to "About" page. This will be a pop-up window.
+		JLabel lblNewLabel = new JLabel("About Pyrex");
+		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblNewLabel.setForeground(new Color(51, 153, 255));
+		
+		//Will become link that generates a window pop-up, or will display text in the scrollpane display box
+		JLabel lblNewLabel_1 = new JLabel("How to search for documents");
+		lblNewLabel_1.setForeground(new Color(51, 153, 255));
+		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		
+		//Will become link that generates a window pop-up, or will display text in the scrollpane display box
+		JLabel lblNewLabel_2 = new JLabel("How to load documents");
+		lblNewLabel_2.setForeground(new Color(51, 153, 255));
+		lblNewLabel_2.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		
 		GroupLayout gl_help = new GroupLayout(help);
 		gl_help.setHorizontalGroup(
-			gl_help.createParallelGroup(Alignment.TRAILING)
+			gl_help.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_help.createSequentialGroup()
-					.addGroup(gl_help.createParallelGroup(Alignment.TRAILING)
-						.addGroup(Alignment.LEADING, gl_help.createSequentialGroup()
+					.addGroup(gl_help.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_help.createSequentialGroup()
 							.addGap(45)
 							.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 781, Short.MAX_VALUE))
-						.addGroup(Alignment.LEADING, gl_help.createSequentialGroup()
+						.addGroup(gl_help.createSequentialGroup()
 							.addGap(26)
 							.addComponent(txtpnEnterTheTopic, GroupLayout.PREFERRED_SIZE, 149, GroupLayout.PREFERRED_SIZE)
 							.addGap(32)
@@ -196,7 +219,15 @@ public class Display {
 							.addPreferredGap(ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
 							.addComponent(btnNewButton)))
 					.addGap(49))
+				.addGroup(gl_help.createSequentialGroup()
+					.addGap(95)
+					.addGroup(gl_help.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblNewLabel, GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
+						.addComponent(lblNewLabel_1, GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
+						.addComponent(lblNewLabel_2, GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE))
+					.addContainerGap(545, GroupLayout.PREFERRED_SIZE))
 		);
+		
 		gl_help.setVerticalGroup(
 			gl_help.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_help.createSequentialGroup()
@@ -206,9 +237,15 @@ public class Display {
 							.addComponent(textField, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
 							.addComponent(btnNewButton))
 						.addComponent(txtpnEnterTheTopic, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addGap(276)
+					.addGap(58)
+					.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE)
+					.addGap(18)
+					.addComponent(lblNewLabel_1)
+					.addGap(18)
+					.addComponent(lblNewLabel_2)
+					.addPreferredGap(ComponentPlacement.RELATED, 124, Short.MAX_VALUE)
 					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 268, GroupLayout.PREFERRED_SIZE)
-					.addGap(135))
+					.addGap(134))
 		);
 		help.setLayout(gl_help);
 		

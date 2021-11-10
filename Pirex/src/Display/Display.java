@@ -135,7 +135,17 @@ public class Display {
 		tabbedPane.setBackgroundAt(1, Color.WHITE);
 		summarize.setLayout(new GridLayout(1, 0, 0, 0));
 		
-//Code for "Load Documents" page
+		JScrollPane summarizeScrollPane = new JScrollPane();
+		summarizeScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		summarizeScrollPane.setViewportBorder(new LineBorder(new Color(0, 0, 0), 3));
+		summarize.add(summarizeScrollPane);
+		
+		JTextArea summarizeTextArea = new JTextArea();
+		summarizeTextArea.setForeground(Color.WHITE);
+		summarizeScrollPane.setViewportView(summarizeTextArea);
+		
+		//Code for "Load Documents" page
+
 
 		JPanel load = new JPanel();
 		load.setForeground(Color.WHITE);

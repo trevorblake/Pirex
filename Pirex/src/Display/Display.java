@@ -264,7 +264,7 @@ public class Display {
 		tabbedPane.setBackgroundAt(3, Color.WHITE);
 		search.setLayout(new GridLayout(1, 0, 0, 0));
 
-
+//Code for "Help" page
 					
 
 		JPanel help = new JPanel();

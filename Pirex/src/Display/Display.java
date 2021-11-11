@@ -168,15 +168,91 @@ public class Display {
 		//Code for "Load Documents" page
 
 
+
 		JPanel load = new JPanel();
 		load.setForeground(Color.WHITE);
 		load.setBorder(null);
 		load.setBackground(Color.WHITE);
 		tabbedPane.addTab("", new ImageIcon("images/ld iconr.png"), load, "Load Documents Section");
+		
+		JLabel lblTextFile = new JLabel("Text File");
+		lblTextFile.setFont(new Font("Tahoma", Font.BOLD, 14));
+		
+		textFieldTextFile = new JTextField();
+		textFieldTextFile.setColumns(10);
+		
+		JLabel lblTitle = new JLabel("Title:");
+		lblTitle.setFont(new Font("Tahoma", Font.BOLD, 14));
+		
+		textFieldTitle = new JTextField();
+		textFieldTitle.setColumns(10);
+		
+		JLabel lblAuthor = new JLabel("Author:");
+		lblAuthor.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblAuthor.setForeground(new Color(0, 0, 0));
+		
+		textFieldAuthor = new JTextField();
+		textFieldAuthor.setColumns(10);
+		
+		JButton btnBrowse = new JButton("BROWSE");
+		
+		JButton btnProcess = new JButton("PROCESS");
+		
+		JScrollPane scrollPaneLoadState = new JScrollPane();
+		
+		GroupLayout gl_load = new GroupLayout(load);
+		gl_load.setHorizontalGroup(
+			gl_load.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_load.createSequentialGroup()
+					.addGap(37)
+					.addGroup(gl_load.createParallelGroup(Alignment.LEADING)
+						.addComponent(scrollPaneLoadState, GroupLayout.PREFERRED_SIZE, 805, GroupLayout.PREFERRED_SIZE)
+						.addGroup(gl_load.createSequentialGroup()
+							.addGroup(gl_load.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblTextFile, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblTitle, GroupLayout.PREFERRED_SIZE, 45, GroupLayout.PREFERRED_SIZE))
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addGroup(gl_load.createParallelGroup(Alignment.LEADING, false)
+								.addComponent(textFieldTextFile, GroupLayout.PREFERRED_SIZE, 605, GroupLayout.PREFERRED_SIZE)
+								.addGroup(Alignment.TRAILING, gl_load.createSequentialGroup()
+									.addComponent(textFieldTitle, GroupLayout.PREFERRED_SIZE, 205, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+									.addComponent(lblAuthor)
+									.addGap(28)
+									.addComponent(textFieldAuthor, GroupLayout.PREFERRED_SIZE, 217, GroupLayout.PREFERRED_SIZE)))
+							.addGap(18, 19, Short.MAX_VALUE)
+							.addGroup(gl_load.createParallelGroup(Alignment.LEADING)
+								.addComponent(btnProcess, GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE)
+								.addComponent(btnBrowse, GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE))))
+					.addGap(33))
+		);
+		gl_load.setVerticalGroup(
+			gl_load.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_load.createSequentialGroup()
+					.addGap(31)
+					.addGroup(gl_load.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblTextFile)
+						.addComponent(textFieldTextFile, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE)
+						.addComponent(btnBrowse, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE))
+					.addGap(45)
+					.addGroup(gl_load.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblTitle)
+						.addComponent(textFieldTitle, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE)
+						.addComponent(btnProcess, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE)
+						.addComponent(textFieldAuthor, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblAuthor))
+					.addGap(100)
+					.addComponent(scrollPaneLoadState, GroupLayout.PREFERRED_SIZE, 418, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(123, Short.MAX_VALUE))
+		);
+		
+		textFieldScroll = new JTextField();
+		scrollPaneLoadState.setViewportView(textFieldScroll);
+		textFieldScroll.setColumns(10);
+		load.setLayout(gl_load);
+
 		tabbedPane.setBackgroundAt(2, Color.WHITE);
-		load.setLayout(new GridLayout(1, 0, 0, 0));
-		
-		
+
 		
 //Code for "Search Documents" page
 

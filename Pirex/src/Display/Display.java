@@ -131,7 +131,7 @@ public class Display {
 		
 // Code for " Summarize Documents" page
 
-		Jpanel summarize = new JPanel();
+		JPanel summarize = new JPanel();
 		summarize.setForeground(Color.WHITE);
 		summarize.setBorder(null);
 		summarize.setBackground(Color.WHITE);

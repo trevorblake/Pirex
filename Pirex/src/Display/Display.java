@@ -60,6 +60,10 @@ public class Display {
 
 	private JFrame frmPirex;
 	private JTextField textField;
+	private JTextField textFieldTextFile;
+	private JTextField textFieldTitle;
+	private JTextField textFieldAuthor;
+	private JTextField textFieldScroll;
 
 	/**
 	 * Launch the application.
@@ -94,7 +98,7 @@ public class Display {
 	 */
 	private void initialize() {
 		frmPirex = new JFrame();
-		frmPirex.setResizable(false);
+		frmPirex.setResizable(true);
 		frmPirex.setIconImage(Toolkit.getDefaultToolkit().getImage("images/p.png"));
 		frmPirex.getContentPane().setBackground(Color.WHITE);
 		frmPirex.setBackground(new Color(0, 0, 0));
@@ -158,6 +162,8 @@ public class Display {
 					.addContainerGap(71, Short.MAX_VALUE))
 		);
 		summarize.setLayout(gl_summarize);
+		
+		
 		
 		//Code for "Load Documents" page
 
@@ -246,6 +252,8 @@ public class Display {
 		
 		tabbedPane.setBackgroundAt(2, Color.WHITE);
 		
+		
+		
 //Code for "Search Documents" page
 
 		JPanel search = new JPanel();
@@ -257,10 +265,7 @@ public class Display {
 		search.setLayout(new GridLayout(1, 0, 0, 0));
 
 
-						
-
-		
-// Code for "Help Page"
+					
 
 		JPanel help = new JPanel();
 		help.setForeground(Color.WHITE);
@@ -397,6 +402,6 @@ public class Display {
 		);
 		help.setLayout(gl_help);
 		
-
+		
 	}
 }

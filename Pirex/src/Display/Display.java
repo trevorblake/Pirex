@@ -29,6 +29,8 @@ import java.awt.GridLayout;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.EmptyBorder;
 import java.awt.Component;
+import java.awt.Cursor;
+
 import javax.swing.Box;
 import javax.swing.JRadioButtonMenuItem;
 import java.awt.Toolkit;
@@ -50,6 +52,8 @@ import javax.swing.JList;
 import javax.swing.AbstractListModel;
 import javax.swing.ListSelectionModel;
 import java.awt.Panel;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 
 public class Display {
@@ -198,20 +202,63 @@ public class Display {
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		
-		//Will become hyperlink that opens to "About" page. This will be a pop-up window.
-		JLabel lblNewLabel = new JLabel("About Pyrex");
-		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblNewLabel.setForeground(new Color(51, 153, 255));
+		//Creates hyperlink with label "About" page. This will be a pop-up window.
+		JLabel hyperlink = new JLabel("About Pyrex");
+		hyperlink.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				hyperlink.setText("<html><a href=''>About Pyrex</a></html>");
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				hyperlink.setText("About Pyrex");
+			}
+		});
+		hyperlink.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		hyperlink.setForeground(new Color(51, 153, 255));
+		hyperlink.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		
 		//Will become link that generates a window pop-up, or will display text in the scrollpane display box
-		JLabel lblNewLabel_1 = new JLabel("How to search for documents");
-		lblNewLabel_1.setForeground(new Color(51, 153, 255));
-		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		JLabel howToSearch_hyperlink = new JLabel("How to search for documents");
+		howToSearch_hyperlink.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				howToSearch_hyperlink.setText("<html><a href=''>How to search for documents</a></html>");
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				howToSearch_hyperlink.setText("How to search for documents");
+			}
+		});
+		howToSearch_hyperlink.setForeground(new Color(51, 153, 255));
+		howToSearch_hyperlink.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		howToSearch_hyperlink.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		
 		//Will become link that generates a window pop-up, or will display text in the scrollpane display box
-		JLabel lblNewLabel_2 = new JLabel("How to load documents");
-		lblNewLabel_2.setForeground(new Color(51, 153, 255));
-		lblNewLabel_2.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		JLabel howToLoad_hyperlink = new JLabel("How to load documents");
+		howToLoad_hyperlink.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				howToLoad_hyperlink.setText("<html><a href=''>How to load documents</a></html>");
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				howToLoad_hyperlink.setText("How to load documents");
+			}
+		});
+		howToLoad_hyperlink.setForeground(new Color(51, 153, 255));
+		howToLoad_hyperlink.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		howToLoad_hyperlink.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		
 		GroupLayout gl_help = new GroupLayout(help);
 		gl_help.setHorizontalGroup(
@@ -232,9 +279,11 @@ public class Display {
 				.addGroup(gl_help.createSequentialGroup()
 					.addGap(95)
 					.addGroup(gl_help.createParallelGroup(Alignment.LEADING)
-						.addComponent(lblNewLabel, GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
-						.addComponent(lblNewLabel_1, GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
-						.addComponent(lblNewLabel_2, GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE))
+						//relevant to "About Pyrex" hyperlink	
+						.addComponent(hyperlink, GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
+						//
+						.addComponent(howToSearch_hyperlink, GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
+						.addComponent(howToLoad_hyperlink, GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE))
 					.addContainerGap(545, GroupLayout.PREFERRED_SIZE))
 		);
 		
@@ -247,12 +296,14 @@ public class Display {
 							.addComponent(textField, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
 							.addComponent(btnNewButton))
 						.addComponent(txtpnEnterTheTopic, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					//relevant to "About Pyrex" hyperlink
 					.addGap(58)
-					.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE)
+					.addComponent(hyperlink, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE)
+					//
 					.addGap(18)
-					.addComponent(lblNewLabel_1)
+					.addComponent(howToSearch_hyperlink)
 					.addGap(18)
-					.addComponent(lblNewLabel_2)
+					.addComponent(howToLoad_hyperlink)
 					.addPreferredGap(ComponentPlacement.RELATED, 124, Short.MAX_VALUE)
 					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 268, GroupLayout.PREFERRED_SIZE)
 					.addGap(134))

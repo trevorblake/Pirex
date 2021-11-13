@@ -29,6 +29,8 @@ import java.awt.GridLayout;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.EmptyBorder;
 import java.awt.Component;
+import java.awt.Cursor;
+
 import javax.swing.Box;
 import javax.swing.JRadioButtonMenuItem;
 import java.awt.Toolkit;
@@ -46,12 +48,22 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.LineBorder;
+import javax.swing.JList;
+import javax.swing.AbstractListModel;
+import javax.swing.ListSelectionModel;
+import java.awt.Panel;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 
 public class Display {
 
 	private JFrame frmPirex;
 	private JTextField textField;
+	private JTextField textFieldTextFile;
+	private JTextField textFieldTitle;
+	private JTextField textFieldAuthor;
+	private JTextField textFieldScroll;
 
 	/**
 	 * Launch the application.
@@ -86,7 +98,7 @@ public class Display {
 	 */
 	private void initialize() {
 		frmPirex = new JFrame();
-		frmPirex.setResizable(false);
+		frmPirex.setResizable(true);
 		frmPirex.setIconImage(Toolkit.getDefaultToolkit().getImage("images/p.png"));
 		frmPirex.getContentPane().setBackground(Color.WHITE);
 		frmPirex.setBackground(new Color(0, 0, 0));
@@ -121,7 +133,7 @@ public class Display {
 		welcomeText.setBounds(69, 179, 650, 97);
 		welcome.add(welcomeText);
 		
-		// Code for " Summarize Documents" page
+// Code for " Summarize Documents" page
 
 		JPanel summarize = new JPanel();
 		summarize.setForeground(Color.WHITE);
@@ -129,19 +141,120 @@ public class Display {
 		summarize.setBackground(Color.WHITE);
 		tabbedPane.addTab("", new ImageIcon("images/summ iconr1.png"), summarize, "Summarized Document View");
 		tabbedPane.setBackgroundAt(1, Color.WHITE);
-		summarize.setLayout(new GridLayout(1, 0, 0, 0));
+		
+		JScrollPane summarizeScrollPane = new JScrollPane();
+		summarizeScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		summarizeScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		summarizeScrollPane.setViewportBorder(new LineBorder(new Color(0, 0, 0), 4));
+		GroupLayout gl_summarize = new GroupLayout(summarize);
+		gl_summarize.setHorizontalGroup(
+			gl_summarize.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_summarize.createSequentialGroup()
+					.addGap(22)
+					.addComponent(summarizeScrollPane, GroupLayout.PREFERRED_SIZE, 827, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(26, Short.MAX_VALUE))
+		);
+		gl_summarize.setVerticalGroup(
+			gl_summarize.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_summarize.createSequentialGroup()
+					.addGap(77)
+					.addComponent(summarizeScrollPane, GroupLayout.PREFERRED_SIZE, 626, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(71, Short.MAX_VALUE))
+		);
+		summarize.setLayout(gl_summarize);
+		
+		
 		
 		//Code for "Load Documents" page
+
+
 
 		JPanel load = new JPanel();
 		load.setForeground(Color.WHITE);
 		load.setBorder(null);
 		load.setBackground(Color.WHITE);
 		tabbedPane.addTab("", new ImageIcon("images/ld iconr.png"), load, "Load Documents Section");
-		tabbedPane.setBackgroundAt(2, Color.WHITE);
-		load.setLayout(new GridLayout(1, 0, 0, 0));
 		
-		//Code for "Search Documents" page
+		JLabel lblTextFile = new JLabel("Text File");
+		lblTextFile.setFont(new Font("Tahoma", Font.BOLD, 14));
+		
+		textFieldTextFile = new JTextField();
+		textFieldTextFile.setColumns(10);
+		
+		JLabel lblTitle = new JLabel("Title:");
+		lblTitle.setFont(new Font("Tahoma", Font.BOLD, 14));
+		
+		textFieldTitle = new JTextField();
+		textFieldTitle.setColumns(10);
+		
+		JLabel lblAuthor = new JLabel("Author:");
+		lblAuthor.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblAuthor.setForeground(new Color(0, 0, 0));
+		
+		textFieldAuthor = new JTextField();
+		textFieldAuthor.setColumns(10);
+		
+		JButton btnBrowse = new JButton("BROWSE");
+		
+		JButton btnProcess = new JButton("PROCESS");
+		
+		JScrollPane scrollPaneLoadState = new JScrollPane();
+		
+		GroupLayout gl_load = new GroupLayout(load);
+		gl_load.setHorizontalGroup(
+			gl_load.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_load.createSequentialGroup()
+					.addGap(37)
+					.addGroup(gl_load.createParallelGroup(Alignment.LEADING)
+						.addComponent(scrollPaneLoadState, GroupLayout.PREFERRED_SIZE, 805, GroupLayout.PREFERRED_SIZE)
+						.addGroup(gl_load.createSequentialGroup()
+							.addGroup(gl_load.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblTextFile, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblTitle, GroupLayout.PREFERRED_SIZE, 45, GroupLayout.PREFERRED_SIZE))
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addGroup(gl_load.createParallelGroup(Alignment.LEADING, false)
+								.addComponent(textFieldTextFile, GroupLayout.PREFERRED_SIZE, 605, GroupLayout.PREFERRED_SIZE)
+								.addGroup(Alignment.TRAILING, gl_load.createSequentialGroup()
+									.addComponent(textFieldTitle, GroupLayout.PREFERRED_SIZE, 205, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+									.addComponent(lblAuthor)
+									.addGap(28)
+									.addComponent(textFieldAuthor, GroupLayout.PREFERRED_SIZE, 217, GroupLayout.PREFERRED_SIZE)))
+							.addGap(18, 19, Short.MAX_VALUE)
+							.addGroup(gl_load.createParallelGroup(Alignment.LEADING)
+								.addComponent(btnProcess, GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE)
+								.addComponent(btnBrowse, GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE))))
+					.addGap(33))
+		);
+		gl_load.setVerticalGroup(
+			gl_load.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_load.createSequentialGroup()
+					.addGap(31)
+					.addGroup(gl_load.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblTextFile)
+						.addComponent(textFieldTextFile, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE)
+						.addComponent(btnBrowse, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE))
+					.addGap(45)
+					.addGroup(gl_load.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblTitle)
+						.addComponent(textFieldTitle, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE)
+						.addComponent(btnProcess, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE)
+						.addComponent(textFieldAuthor, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblAuthor))
+					.addGap(100)
+					.addComponent(scrollPaneLoadState, GroupLayout.PREFERRED_SIZE, 418, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(123, Short.MAX_VALUE))
+		);
+		
+		textFieldScroll = new JTextField();
+		scrollPaneLoadState.setViewportView(textFieldScroll);
+		textFieldScroll.setColumns(10);
+		load.setLayout(gl_load);
+
+		tabbedPane.setBackgroundAt(2, Color.WHITE);
+
+		
+//Code for "Search Documents" page
 
 		JPanel search = new JPanel();
 		search.setForeground(Color.WHITE);
@@ -151,11 +264,8 @@ public class Display {
 		tabbedPane.setBackgroundAt(3, Color.WHITE);
 		search.setLayout(new GridLayout(1, 0, 0, 0));
 
-
-						
-
-		
-		// Code for "Help Page"
+//Code for "Help" page
+					
 
 		JPanel help = new JPanel();
 		help.setForeground(Color.WHITE);
@@ -169,26 +279,88 @@ public class Display {
 		textField = new JTextField();
 		textField.setColumns(10);
 		
+		//"Search" button next to fillable text box
 		JButton btnNewButton = new JButton("Search Topics");
 		btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 13));
 		
+		//Label next to fillable text box
 		JTextPane txtpnEnterTheTopic = new JTextPane();
 		txtpnEnterTheTopic.setFont(new Font("Tahoma", Font.BOLD, 13));
 		txtpnEnterTheTopic.setText("Enter the topic you would like help with:");
 		
+		//Scroll pane that displays search topic results when "Search Topics" button is clicked
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setViewportBorder(new LineBorder(new Color(0, 0, 0), 2, true));
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		
+		//Creates hyperlink with label "About" page. This will be a pop-up window.
+		JLabel hyperlink = new JLabel("About Pyrex");
+		hyperlink.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				hyperlink.setText("<html><a href=''>About Pyrex</a></html>");
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				hyperlink.setText("About Pyrex");
+			}
+		});
+		hyperlink.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		hyperlink.setForeground(new Color(51, 153, 255));
+		hyperlink.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		
+		//Will become link that generates a window pop-up, or will display text in the scrollpane display box
+		JLabel howToSearch_hyperlink = new JLabel("How to search for documents");
+		howToSearch_hyperlink.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				howToSearch_hyperlink.setText("<html><a href=''>How to search for documents</a></html>");
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				howToSearch_hyperlink.setText("How to search for documents");
+			}
+		});
+		howToSearch_hyperlink.setForeground(new Color(51, 153, 255));
+		howToSearch_hyperlink.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		howToSearch_hyperlink.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		
+		//Will become link that generates a window pop-up, or will display text in the scrollpane display box
+		JLabel howToLoad_hyperlink = new JLabel("How to load documents");
+		howToLoad_hyperlink.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				howToLoad_hyperlink.setText("<html><a href=''>How to load documents</a></html>");
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				howToLoad_hyperlink.setText("How to load documents");
+			}
+		});
+		howToLoad_hyperlink.setForeground(new Color(51, 153, 255));
+		howToLoad_hyperlink.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		howToLoad_hyperlink.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		
 		GroupLayout gl_help = new GroupLayout(help);
 		gl_help.setHorizontalGroup(
-			gl_help.createParallelGroup(Alignment.TRAILING)
+			gl_help.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_help.createSequentialGroup()
-					.addGroup(gl_help.createParallelGroup(Alignment.TRAILING)
-						.addGroup(Alignment.LEADING, gl_help.createSequentialGroup()
+					.addGroup(gl_help.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_help.createSequentialGroup()
 							.addGap(45)
 							.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 781, Short.MAX_VALUE))
-						.addGroup(Alignment.LEADING, gl_help.createSequentialGroup()
+						.addGroup(gl_help.createSequentialGroup()
 							.addGap(26)
 							.addComponent(txtpnEnterTheTopic, GroupLayout.PREFERRED_SIZE, 149, GroupLayout.PREFERRED_SIZE)
 							.addGap(32)
@@ -196,7 +368,17 @@ public class Display {
 							.addPreferredGap(ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
 							.addComponent(btnNewButton)))
 					.addGap(49))
+				.addGroup(gl_help.createSequentialGroup()
+					.addGap(95)
+					.addGroup(gl_help.createParallelGroup(Alignment.LEADING)
+						//relevant to "About Pyrex" hyperlink	
+						.addComponent(hyperlink, GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
+						//
+						.addComponent(howToSearch_hyperlink, GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
+						.addComponent(howToLoad_hyperlink, GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE))
+					.addContainerGap(545, GroupLayout.PREFERRED_SIZE))
 		);
+		
 		gl_help.setVerticalGroup(
 			gl_help.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_help.createSequentialGroup()
@@ -206,12 +388,20 @@ public class Display {
 							.addComponent(textField, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
 							.addComponent(btnNewButton))
 						.addComponent(txtpnEnterTheTopic, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addGap(276)
+					//relevant to "About Pyrex" hyperlink
+					.addGap(58)
+					.addComponent(hyperlink, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE)
+					//
+					.addGap(18)
+					.addComponent(howToSearch_hyperlink)
+					.addGap(18)
+					.addComponent(howToLoad_hyperlink)
+					.addPreferredGap(ComponentPlacement.RELATED, 124, Short.MAX_VALUE)
 					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 268, GroupLayout.PREFERRED_SIZE)
-					.addGap(135))
+					.addGap(134))
 		);
 		help.setLayout(gl_help);
 		
-
+		
 	}
 }

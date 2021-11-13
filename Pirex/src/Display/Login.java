@@ -57,7 +57,7 @@ final class Login extends JFrame implements ActionListener {
         container.add(resetButton);
         
         JLabel pireximage = new JLabel("");
-        pireximage.setIcon(new ImageIcon("C:\\Users\\Boreal\\OneDrive\\Desktop\\School\\CSC 131\\images\\pirex.png"));
+        pireximage.setIcon(new ImageIcon("images/pirex.png"));
         pireximage.setBounds(107, 11, 140, 74);
         getContentPane().add(pireximage);
         lblNewLabel.setBounds(102, 83, 130, 47);
@@ -99,7 +99,7 @@ final class Login extends JFrame implements ActionListener {
         }
         if (e.getSource() == resetButton) {
             userTextField.setText("");
-            passwordField.setText("");
+            passwordField.setText("") ;
         }
         if (e.getSource() == showPassword) {
             if (showPassword.isSelected()) {

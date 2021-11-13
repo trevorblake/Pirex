@@ -30,6 +30,7 @@ public class Search extends JFrame {
 	private JTextField textField;
 	private JTextField txtPleaseEnterYour;
 
+
 	/**
 	 * Launch the application.
 	 */

@@ -45,7 +45,6 @@ final class Login extends JFrame implements ActionListener {
         loginButton.setBounds(50, 308, 100, 30);
         resetButton.setBounds(200, 308, 100, 30);
 
-
     }
 
     public void addComponentsToContainer() {

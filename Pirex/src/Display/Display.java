@@ -515,10 +515,6 @@ public class Display {
 		JLabel lblNewLabel_1 = new JLabel("Retrieved Document:");
 		lblNewLabel_1.setBounds(33, 371, 138, 19);
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		
-		JLabel lblNewLabel_2 = new JLabel("New label");
-		lblNewLabel_2.setBounds(10, 11, 120, 43);
-		lblNewLabel_2.setIcon(new ImageIcon("C:\\Users\\Aman Singh\\git\\Final-Project\\Pirex\\images\\pirex.png"));
 		search.setLayout(null);
 		search.add(lblNewLabel);
 		search.add(lblNewLabel_1);
@@ -534,7 +530,6 @@ public class Display {
 		
 		JTextArea textArea = new JTextArea();
 		scrollPane_2.setViewportView(textArea);
-		search.add(lblNewLabel_2);
 		
 		JPanel panel = new JPanel();
 		panel.setBorder(new LineBorder(new Color(0, 0, 0)));

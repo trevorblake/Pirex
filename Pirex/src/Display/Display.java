@@ -138,7 +138,7 @@ public class Display {
 		docs.add(new Doc("Star Wars", "Trevor Blake", "00:09 11-16-2021"));
 		frmPirex = new JFrame();
 		frmPirex.setResizable(true);
-		frmPirex.setIconImage(Toolkit.getDefaultToolkit().getImage("images/p.png"));
+		frmPirex.setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\Aman Singh\\git\\Final-Project\\Pirex\\images\\p.png"));
 		frmPirex.getContentPane().setBackground(Color.WHITE);
 		frmPirex.setBackground(new Color(0, 0, 0));
 		frmPirex.setForeground(Color.WHITE);
@@ -332,77 +332,6 @@ public class Display {
 
 		tabbedPane.setBackgroundAt(2, Color.WHITE);
 		
-
-
-		
-//Code for "Search Documents" page
-
-		JPanel search = new JPanel();
-		search.setForeground(Color.WHITE);
-		search.setBorder(null);
-		search.setBackground(Color.WHITE);
-		tabbedPane.addTab("", new ImageIcon("images/sea iconr.png"), search, "Search For Documents");
-		
-		JButton btnNewButton_1 = new JButton("New button");
-		
-		textField_3 = new JTextField();
-		textField_3.setColumns(10);
-		
-		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		scrollPane_1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		
-		JScrollPane scrollPane_2 = new JScrollPane();
-		scrollPane_2.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		scrollPane_2.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		
-		JButton btnNewButton_2 = new JButton("New button");
-		
-		JButton btnNewButton_3 = new JButton("New button");
-		GroupLayout gl_search = new GroupLayout(search);
-		gl_search.setHorizontalGroup(
-			gl_search.createParallelGroup(Alignment.TRAILING)
-				.addGroup(Alignment.LEADING, gl_search.createSequentialGroup()
-					.addGap(100)
-					.addGroup(gl_search.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_search.createSequentialGroup()
-							.addGroup(gl_search.createParallelGroup(Alignment.LEADING, false)
-								.addComponent(textField_3, Alignment.TRAILING)
-								.addComponent(scrollPane_1, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 527, Short.MAX_VALUE))
-							.addGap(86)
-							.addComponent(btnNewButton_1)
-							.addGap(73))
-						.addGroup(gl_search.createSequentialGroup()
-							.addGroup(gl_search.createParallelGroup(Alignment.TRAILING)
-								.addComponent(btnNewButton_2)
-								.addComponent(scrollPane_2, GroupLayout.PREFERRED_SIZE, 701, GroupLayout.PREFERRED_SIZE)
-								.addComponent(btnNewButton_3))
-							.addContainerGap())))
-		);
-		gl_search.setVerticalGroup(
-			gl_search.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_search.createSequentialGroup()
-					.addGap(89)
-					.addGroup(gl_search.createParallelGroup(Alignment.TRAILING)
-						.addComponent(btnNewButton_1)
-						.addComponent(textField_3, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))
-					.addGroup(gl_search.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_search.createSequentialGroup()
-							.addGap(59)
-							.addComponent(scrollPane_1, GroupLayout.PREFERRED_SIZE, 155, GroupLayout.PREFERRED_SIZE))
-						.addGroup(gl_search.createSequentialGroup()
-							.addGap(94)
-							.addComponent(btnNewButton_2)
-							.addGap(36)
-							.addComponent(btnNewButton_3)))
-					.addGap(53)
-					.addComponent(scrollPane_2, GroupLayout.PREFERRED_SIZE, 295, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(93, Short.MAX_VALUE))
-		);
-		search.setLayout(gl_search);
-		tabbedPane.setEnabledAt(3, true);
-		tabbedPane.setBackgroundAt(3, Color.WHITE);
-		
 		
 
 //Code for "Help" page
@@ -413,9 +342,9 @@ public class Display {
 		help.setBorder(null);
 		help.setBackground(Color.WHITE);
 		tabbedPane.addTab("", new ImageIcon("images/help iconr.png"), help, "Need Help?");
-		tabbedPane.setEnabledAt(4, true);
-		tabbedPane.setDisabledIconAt(4, new ImageIcon("images/help icong.jpg"));
-		tabbedPane.setBackgroundAt(4, Color.WHITE);
+		tabbedPane.setEnabledAt(3, true);
+		tabbedPane.setDisabledIconAt(3, new ImageIcon("images/help icong.jpg"));
+		tabbedPane.setBackgroundAt(3, Color.WHITE);
 		
 		textField = new JTextField();
 		textField.setColumns(10);
@@ -542,6 +471,76 @@ public class Display {
 					.addGap(134))
 		);
 		help.setLayout(gl_help);
+		
+
+
+		
+//Code for "Search Documents" page
+
+		JPanel search = new JPanel();
+		search.setForeground(Color.WHITE);
+		search.setBorder(null);
+		search.setBackground(Color.WHITE);
+		tabbedPane.addTab("", new ImageIcon("images/sea iconr.png"), search, "Search For Documents");
+		tabbedPane.setEnabledAt(4, true);
+		tabbedPane.setBackgroundAt(4, Color.WHITE);
+		
+		JButton btnNewButton_1 = new JButton("CLEAR\r\n");
+		btnNewButton_1.setBounds(718, 93, 94, 23);
+		
+		textField_3 = new JTextField();
+		textField_3.setBounds(108, 89, 604, 30);
+		textField_3.setColumns(10);
+		
+		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(62, 141, 630, 204);
+		scrollPane_1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollPane_1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		
+		JScrollPane scrollPane_2 = new JScrollPane();
+		scrollPane_2.setBounds(33, 388, 813, 325);
+		scrollPane_2.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollPane_2.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		
+		JButton btnNewButton_2 = new JButton("EDIT\r\n");
+		btnNewButton_2.setBounds(718, 212, 94, 23);
+		
+		JButton btnNewButton_3 = new JButton("DELETE");
+		btnNewButton_3.setBounds(718, 270, 94, 23);
+		
+		JLabel lblNewLabel = new JLabel("Query:");
+		lblNewLabel.setBounds(44, 93, 45, 19);
+		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		
+		JLabel lblNewLabel_1 = new JLabel("Retrieved Document:");
+		lblNewLabel_1.setBounds(33, 371, 138, 19);
+		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		
+		JLabel lblNewLabel_2 = new JLabel("New label");
+		lblNewLabel_2.setBounds(10, 11, 120, 43);
+		lblNewLabel_2.setIcon(new ImageIcon("C:\\Users\\Aman Singh\\git\\Final-Project\\Pirex\\images\\pirex.png"));
+		search.setLayout(null);
+		search.add(lblNewLabel);
+		search.add(lblNewLabel_1);
+		search.add(scrollPane_1);
+		
+		JList list = new JList();
+		scrollPane_1.setViewportView(list);
+		search.add(textField_3);
+		search.add(btnNewButton_3);
+		search.add(btnNewButton_1);
+		search.add(btnNewButton_2);
+		search.add(scrollPane_2);
+		
+		JTextArea textArea = new JTextArea();
+		scrollPane_2.setViewportView(textArea);
+		search.add(lblNewLabel_2);
+		
+		JPanel panel = new JPanel();
+		panel.setBorder(new LineBorder(new Color(0, 0, 0)));
+		panel.setBackground(Color.WHITE);
+		panel.setBounds(33, 65, 813, 295);
+		search.add(panel);
 
 	}
 

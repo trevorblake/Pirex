@@ -9,6 +9,8 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.JTabbedPane;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
+import javax.swing.Timer;
+
 import java.awt.Color;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
@@ -24,6 +26,7 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JTextPane;
 import javax.swing.JDesktopPane;
+import javax.swing.JFileChooser;
 import javax.swing.JToolBar;
 import java.awt.GridLayout;
 import javax.swing.border.EtchedBorder;
@@ -54,6 +57,14 @@ import javax.swing.ListSelectionModel;
 import java.awt.Panel;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.lang.ProcessHandle.Info;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 
 public class Display {
@@ -63,8 +74,11 @@ public class Display {
 	private JTextField textFieldTextFile;
 	private JTextField textFieldTitle;
 	private JTextField textFieldAuthor;
-	private JTextField textFieldScroll;
-
+	JTextArea textFieldScroll = new JTextArea();
+	private JFileChooser fc = new JFileChooser();
+	private ArrayList<String> loadInfo = new ArrayList<>();
+	private int index = 0;
+	private Timer timer;
 	/**
 	 * Launch the application.
 	 */
@@ -191,14 +205,69 @@ public class Display {
 		lblAuthor.setFont(new Font("Tahoma", Font.BOLD, 14));
 		lblAuthor.setForeground(new Color(0, 0, 0));
 		
-		textFieldAuthor = new JTextField();
-		textFieldAuthor.setColumns(10);
+
 		
-		JButton btnBrowse = new JButton("BROWSE");
-		
-		JButton btnProcess = new JButton("PROCESS");
 		
 		JScrollPane scrollPaneLoadState = new JScrollPane();
+		scrollPaneLoadState.setViewportView(textFieldScroll);
+		
+		JButton btnBrowse = new JButton("BROWSE");
+		btnBrowse.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				int a = fc.showSaveDialog(null);
+				
+				if (a == JFileChooser.APPROVE_OPTION)
+				{
+					textFieldTextFile.setText(fc.getSelectedFile().getAbsolutePath());
+				}
+			}
+		});
+		
+		
+		JButton btnProcess = new JButton("PROCESS");
+		btnProcess.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				textFieldScroll.setText("");
+				loadInfo.add("File: ");
+				loadInfo.add(textFieldTextFile.getText());
+				loadInfo.add("\r\nTitle: ");
+				loadInfo.add(textFieldTitle.getText());
+				loadInfo.add("\r\nAuthor: ");
+				loadInfo.add(textFieldAuthor.getText());
+				loadInfo.add("\r\nDate Uploaded: ");
+				loadInfo.add(new SimpleDateFormat("HH:mm MM-dd-yyy").format(new Date()));
+				info(loadInfo);
+				loadTimer(loadInfo);
+
+			}
+		});
+		
+		textFieldAuthor = new JTextField();
+		textFieldAuthor.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				
+		        if (e.getKeyCode() == KeyEvent.VK_ENTER)
+		        {
+				 
+		        	textFieldScroll.setText("");
+					loadInfo.add("File: ");
+					loadInfo.add(textFieldTextFile.getText());
+					loadInfo.add("\r\nTitle: ");
+					loadInfo.add(textFieldTitle.getText());
+					loadInfo.add("\r\nAuthor: ");
+					loadInfo.add(textFieldAuthor.getText());
+					loadInfo.add("\r\nDate Uploaded: ");
+					loadInfo.add(new SimpleDateFormat("HH:mm MM-dd-yyy").format(new Date()));
+					info(loadInfo);
+					loadTimer(loadInfo);
+
+		        }
+			}
+		});
+		textFieldAuthor.setColumns(10);
 		
 		GroupLayout gl_load = new GroupLayout(load);
 		gl_load.setHorizontalGroup(
@@ -246,9 +315,7 @@ public class Display {
 					.addContainerGap(123, Short.MAX_VALUE))
 		);
 		
-		textFieldScroll = new JTextField();
-		scrollPaneLoadState.setViewportView(textFieldScroll);
-		textFieldScroll.setColumns(10);
+
 		load.setLayout(gl_load);
 
 		tabbedPane.setBackgroundAt(2, Color.WHITE);
@@ -403,5 +470,42 @@ public class Display {
 		help.setLayout(gl_help);
 		
 		
+	}
+	public void loadTimer(ArrayList<String> loadInfo)
+	{
+		ActionListener actionListener = new ActionListener() {
+			public void actionPerformed(ActionEvent av) {
+				if (index < loadInfo.size())
+				{
+					textFieldScroll.append(loadInfo.get(index));
+					index++;
+				}
+				else
+				{
+				timer.stop();
+
+				}
+			}
+		};
+		timer = new Timer(150, actionListener);
+		timer.setInitialDelay(5);
+		timer.start();
+	}
+	
+	public void info(ArrayList<String> loadInfo)
+	{
+    	loadInfo.add("\r\nUploading Document To Pirex Database");
+    	addDots(2);
+    	loadInfo.add(".\r\n");
+    	addDots(21);
+    	loadInfo.add("\r\n" + loadInfo.get(3) + " Uploaded Successfully!");
+	}
+	
+	public void addDots(int x)
+	{
+		for (int i = 0; i < x; i++)
+		{
+			loadInfo.add(".");
+		}
 	}
 }

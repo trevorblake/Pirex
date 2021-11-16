@@ -79,6 +79,9 @@ public class Display {
 	private ArrayList<String> loadInfo = new ArrayList<>();
 	private int index = 0;
 	private Timer timer;
+	private JTextField textField_1;
+	private JTextField textField_2;
+	private JTextField textField_3;
 	/**
 	 * Launch the application.
 	 */
@@ -328,8 +331,68 @@ public class Display {
 		search.setBorder(null);
 		search.setBackground(Color.WHITE);
 		tabbedPane.addTab("", new ImageIcon("images/sea iconr.png"), search, "Search For Documents");
+		
+		JButton btnNewButton_1 = new JButton("New button");
+		
+		textField_3 = new JTextField();
+		textField_3.setColumns(10);
+		
+		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollPane_1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		
+		JScrollPane scrollPane_2 = new JScrollPane();
+		scrollPane_2.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollPane_2.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		
+		JButton btnNewButton_2 = new JButton("New button");
+		
+		JButton btnNewButton_3 = new JButton("New button");
+		GroupLayout gl_search = new GroupLayout(search);
+		gl_search.setHorizontalGroup(
+			gl_search.createParallelGroup(Alignment.TRAILING)
+				.addGroup(Alignment.LEADING, gl_search.createSequentialGroup()
+					.addGap(100)
+					.addGroup(gl_search.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_search.createSequentialGroup()
+							.addGroup(gl_search.createParallelGroup(Alignment.LEADING, false)
+								.addComponent(textField_3, Alignment.TRAILING)
+								.addComponent(scrollPane_1, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 527, Short.MAX_VALUE))
+							.addGap(86)
+							.addComponent(btnNewButton_1)
+							.addGap(73))
+						.addGroup(gl_search.createSequentialGroup()
+							.addGroup(gl_search.createParallelGroup(Alignment.TRAILING)
+								.addComponent(btnNewButton_2)
+								.addComponent(scrollPane_2, GroupLayout.PREFERRED_SIZE, 701, GroupLayout.PREFERRED_SIZE)
+								.addComponent(btnNewButton_3))
+							.addContainerGap())))
+		);
+		gl_search.setVerticalGroup(
+			gl_search.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_search.createSequentialGroup()
+					.addGap(89)
+					.addGroup(gl_search.createParallelGroup(Alignment.TRAILING)
+						.addComponent(btnNewButton_1)
+						.addComponent(textField_3, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))
+					.addGroup(gl_search.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_search.createSequentialGroup()
+							.addGap(59)
+							.addComponent(scrollPane_1, GroupLayout.PREFERRED_SIZE, 155, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_search.createSequentialGroup()
+							.addGap(94)
+							.addComponent(btnNewButton_2)
+							.addGap(36)
+							.addComponent(btnNewButton_3)))
+					.addGap(53)
+					.addComponent(scrollPane_2, GroupLayout.PREFERRED_SIZE, 295, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(93, Short.MAX_VALUE))
+		);
+		search.setLayout(gl_search);
+		tabbedPane.setEnabledAt(3, true);
 		tabbedPane.setBackgroundAt(3, Color.WHITE);
-		search.setLayout(new GridLayout(1, 0, 0, 0));
+		
+		
 
 //Code for "Help" page
 					

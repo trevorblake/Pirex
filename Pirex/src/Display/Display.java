@@ -9,6 +9,7 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.JTabbedPane;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 import java.awt.Color;
@@ -60,6 +61,15 @@ import javax.swing.ListSelectionModel;
 import java.awt.Panel;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.lang.ProcessHandle.Info;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -73,19 +83,23 @@ import java.awt.event.KeyEvent;
 public class Display {
 
 	private JFrame frmPirex;
+	JTabbedPane tabbedPane;
 	private JTextField textField;
 	private JTextField textFieldTextFile;
 	private JTextField textFieldTitle;
 	private JTextField textFieldAuthor;
 	JTextArea textFieldScroll = new JTextArea();
-	private JFileChooser fc = new JFileChooser();
-	private ArrayList<String> loadInfo = new ArrayList<>();
 	private int index = 0;
 	private Timer timer;
 	private JTextField textField_1;
 	private JTextField textField_2;
 	private JTextField textField_3;
-	Doc a = new Doc();
+	JTextArea summary;
+	
+	private JFileChooser fc = new JFileChooser();
+	private ArrayList<String> loadInfo = new ArrayList<>();
+	private ArrayList<Doc> docs = new ArrayList<>();
+	
 
 	/**
 	 * Launch the application.
@@ -119,6 +133,9 @@ public class Display {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		
+		docs.add(new Doc("Monty Python", "Trevor Blake", "00:09 11-16-2021"));
+		docs.add(new Doc("Star Wars", "Trevor Blake", "00:09 11-16-2021"));
 		frmPirex = new JFrame();
 		frmPirex.setResizable(true);
 		frmPirex.setIconImage(Toolkit.getDefaultToolkit().getImage("images/p.png"));
@@ -129,7 +146,7 @@ public class Display {
 		frmPirex.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmPirex.getContentPane().setLayout(null);
 		
-		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBackground(Color.WHITE);
 		tabbedPane.setBorder(new EmptyBorder(0, 0, 0, 0));
 
@@ -139,6 +156,7 @@ public class Display {
 
 		frmPirex.getContentPane().add(tabbedPane);
 		
+		        
 // Code for "Welcome Page"
 		JPanel welcome = new JPanel();
 		welcome.setBorder(null);
@@ -184,14 +202,14 @@ public class Display {
 					.addContainerGap(71, Short.MAX_VALUE))
 		);
 		
-		JTextArea summary = new JTextArea();
+		summary = new JTextArea();
 		summary.setWrapStyleWord(true);
 		summary.setLineWrap(true);
 		summary.setEditable(false);
 		summarizeScrollPane.setViewportView(summary);
 		summarize.setLayout(gl_summarize);
-		a.open();
-		summary.setText(a.Read());
+		summary.setText(summaryText(docs));
+		summary.setCaretPosition(0);
 		
 		
 		
@@ -245,18 +263,7 @@ public class Display {
 		btnProcess.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				textFieldScroll.setText("");
-				loadInfo.add("File: ");
-				loadInfo.add(textFieldTextFile.getText());
-				loadInfo.add("\r\nTitle: ");
-				loadInfo.add(textFieldTitle.getText());
-				loadInfo.add("\r\nAuthor: ");
-				loadInfo.add(textFieldAuthor.getText());
-				loadInfo.add("\r\nDate Uploaded: ");
-				loadInfo.add(new SimpleDateFormat("HH:mm MM-dd-yyy").format(new Date()));
-				info(loadInfo);
-				loadTimer(loadInfo);
-
+				processing();
 			}
 		});
 		
@@ -268,18 +275,7 @@ public class Display {
 		        if (e.getKeyCode() == KeyEvent.VK_ENTER)
 		        {
 				 
-		        	textFieldScroll.setText("");
-					loadInfo.add("File: ");
-					loadInfo.add(textFieldTextFile.getText());
-					loadInfo.add("\r\nTitle: ");
-					loadInfo.add(textFieldTitle.getText());
-					loadInfo.add("\r\nAuthor: ");
-					loadInfo.add(textFieldAuthor.getText());
-					loadInfo.add("\r\nDate Uploaded: ");
-					loadInfo.add(new SimpleDateFormat("HH:mm MM-dd-yyy").format(new Date()));
-					info(loadInfo);
-					loadTimer(loadInfo);
-
+		        	processing();
 		        }
 			}
 		});
@@ -335,6 +331,8 @@ public class Display {
 		load.setLayout(gl_load);
 
 		tabbedPane.setBackgroundAt(2, Color.WHITE);
+		
+
 
 		
 //Code for "Search Documents" page
@@ -544,9 +542,73 @@ public class Display {
 					.addGap(134))
 		);
 		help.setLayout(gl_help);
-		
+
+	}
+
+	public void processing()
+	{
+		String file = textFieldTextFile.getText();
+		String title = textFieldTitle.getText();
+		String author = textFieldAuthor.getText();
+		String date = new SimpleDateFormat("HH:mm MM-dd-yyy").format(new Date());
+		try {
+	    	   File a = new File("PirexData/" + title + ".txt");
+	    	   a.createNewFile();
+	    	   copy(new File(file), a);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		docs.add(new Doc(title, author, date));
+		textFieldScroll.setText("");
+		loadInfo.add("File: ");
+		loadInfo.add(file);
+		loadInfo.add("\r\nTitle: ");
+		loadInfo.add(title);
+		loadInfo.add("\r\nAuthor: ");
+		loadInfo.add(author);
+		loadInfo.add("\r\nDate Uploaded: ");
+		loadInfo.add(date);
+		info(loadInfo);
+		loadTimer(loadInfo);
+		summary.setText(summaryText(docs));
+		summary.setCaretPosition(0);
+	}
+	
+	private static void copy(File source, File dest) throws IOException {
+	    InputStream is = null;
+	    OutputStream os = null;
+
+	    try {
+	        is = new FileInputStream(source);
+	        os = new FileOutputStream(dest);
+
+	        int length;
+	        while ((length = is.read()) > 0) {
+	            os.write(length);
+	        }
+	    } finally {
+	        is.close();
+	        os.close();
+	    }
+	}
+	
+	public void load()
+	{
 		
 	}
+	
+	public String summaryText(ArrayList<Doc> docs)
+	{
+		String s = "";
+		for(int i = 0; i < docs.size(); i++)
+		{
+			s+= docs.get(i).toString();
+		}
+		
+		return s;
+	}
+	
 	public void loadTimer(ArrayList<String> loadInfo)
 	{
 		ActionListener actionListener = new ActionListener() {
@@ -563,7 +625,7 @@ public class Display {
 				}
 			}
 		};
-		timer = new Timer(150, actionListener);
+		timer = new Timer(100, actionListener);
 		timer.setInitialDelay(5);
 		timer.start();
 	}

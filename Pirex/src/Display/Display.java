@@ -42,6 +42,9 @@ import java.awt.Dimension;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
+
+import Data.Doc;
+
 import javax.swing.DropMode;
 
 import javax.swing.UIManager;
@@ -82,6 +85,8 @@ public class Display {
 	private JTextField textField_1;
 	private JTextField textField_2;
 	private JTextField textField_3;
+	Doc a = new Doc();
+
 	/**
 	 * Launch the application.
 	 */
@@ -178,7 +183,15 @@ public class Display {
 					.addComponent(summarizeScrollPane, GroupLayout.PREFERRED_SIZE, 626, GroupLayout.PREFERRED_SIZE)
 					.addContainerGap(71, Short.MAX_VALUE))
 		);
+		
+		JTextArea summary = new JTextArea();
+		summary.setWrapStyleWord(true);
+		summary.setLineWrap(true);
+		summary.setEditable(false);
+		summarizeScrollPane.setViewportView(summary);
 		summarize.setLayout(gl_summarize);
+		a.open();
+		summary.setText(a.Read());
 		
 		
 		

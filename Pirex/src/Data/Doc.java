@@ -79,7 +79,7 @@ public class Doc
         return this.text;       
     }
     
-    public String shortForm() // formatting for short form displays
+    public String shortForm(String keyword) // formatting for short form displays
     {
     	return null;
     }

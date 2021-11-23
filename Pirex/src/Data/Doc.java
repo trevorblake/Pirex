@@ -65,9 +65,9 @@ public class Doc
     	
         try {
             scan = new Scanner(new File(this.location));
-            System.out.println("it is working");
+            //System.out.println("it is working");
         } catch (FileNotFoundException e) {
-            System.out.println("it is not working");
+            //System.out.println("it is not working");
         }
     	
     	while(scan.hasNext())
@@ -79,16 +79,19 @@ public class Doc
         return this.text;       
     }
     
-    public String toString() // formatting for summarize documents
+    public String shortForm() // formatting for short form displays
+    {
+    	return null;
+    }
+    
+    public String toString() // formatting for long form displays
     {
     	String s = "";
 		s = "Title: " + title;
-		s += "\r\nAuthor: " + author;
+		s+= "\r\nAuthor: " + author;
 		s+= "\r\nDate Uploaded: " + date + "\r\n";
-		s+= "\r\n" + this.text + "\r\n\r\n"
-				+ "--------------------------------------------------"
-				+ "-------------------------------------------------"
-				+ "\r\n\r\n\r\n";
+		s+= "\r\n" + this.text + "\r\n\r\n";
+
 		return s;
     }
 }

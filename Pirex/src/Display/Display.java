@@ -56,6 +56,7 @@ import javax.swing.JButton;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.LineBorder;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.AbstractListModel;
 import javax.swing.ListSelectionModel;
 import java.awt.Panel;
@@ -278,6 +279,7 @@ public class Display {
 		btnBrowse.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
+				fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 				int a = fc.showSaveDialog(null);
 				
 				if (a == JFileChooser.APPROVE_OPTION)
@@ -372,18 +374,46 @@ public class Display {
 		summarizeScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		summarizeScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		summarizeScrollPane.setViewportBorder(new LineBorder(new Color(0, 0, 0), 4));
+		
+		JButton btnNewButton = new JButton("Export PirexData To A Directory");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+				int a = fc.showSaveDialog(null);
+				
+				if (a == JFileChooser.APPROVE_OPTION)
+				{
+					try {
+						copyDirectory(new File("PirexData"), new File(fc.getSelectedFile().getAbsoluteFile()+ "/PirexDataCopy"));
+						JOptionPane.showMessageDialog(null, "PirexData has been copied to " 
+									+ fc.getSelectedFile().getAbsoluteFile(), "Success!", JOptionPane.INFORMATION_MESSAGE);
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+
+				}
+			}
+		});
 		GroupLayout gl_summarize = new GroupLayout(summarize);
 		gl_summarize.setHorizontalGroup(
-			gl_summarize.createParallelGroup(Alignment.LEADING)
+			gl_summarize.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_summarize.createSequentialGroup()
 					.addGap(22)
 					.addComponent(summarizeScrollPane, GroupLayout.PREFERRED_SIZE, 827, GroupLayout.PREFERRED_SIZE)
 					.addContainerGap(26, Short.MAX_VALUE))
+				.addGroup(gl_summarize.createSequentialGroup()
+					.addContainerGap(363, Short.MAX_VALUE)
+					.addComponent(btnNewButton)
+					.addGap(325))
 		);
 		gl_summarize.setVerticalGroup(
 			gl_summarize.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_summarize.createSequentialGroup()
-					.addGap(77)
+					.addGap(25)
+					.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
+					.addGap(18)
 					.addComponent(summarizeScrollPane, GroupLayout.PREFERRED_SIZE, 626, GroupLayout.PREFERRED_SIZE)
 					.addContainerGap(71, Short.MAX_VALUE))
 		);
@@ -501,6 +531,33 @@ public class Display {
 	    }
 	}
 	
+	public void copyDirectory(File sourceLocation , File targetLocation)
+		    throws IOException {
+
+		        if (sourceLocation.isDirectory()) {
+		            if (!targetLocation.exists()) {
+		                targetLocation.mkdir();
+		            }
+
+		            String[] children = sourceLocation.list();
+		            for (int i=0; i<children.length; i++) {
+		                copyDirectory(new File(sourceLocation, children[i]),
+		                        new File(targetLocation, children[i]));
+		            }
+		        } else {
+
+		            InputStream in = new FileInputStream(sourceLocation);
+		            OutputStream out = new FileOutputStream(targetLocation);
+
+		            int len;
+		            while ((len = in.read()) > 0) {
+		                out.write(len);
+		            }
+		            in.close();
+		            out.close();
+		        }
+		    }
+	
 	public void load()
 	{
 		
@@ -512,6 +569,13 @@ public class Display {
 		for(int i = 0; i < docs.size(); i++)
 		{
 			s+= docs.get(i).toString();
+			
+			if (i < docs.size() - 1)
+			{
+				s+=  "--------------------------------------------------"
+					+ "-------------------------------------------------"
+				    + "\r\n\r\n\r\n";
+			}
 		}
 		
 		return s;
@@ -554,4 +618,5 @@ public class Display {
 			loadInfo.add(".");
 		}
 	}
+	
 }

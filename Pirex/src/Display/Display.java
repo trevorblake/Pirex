@@ -84,7 +84,6 @@ public class Display {
 
 	private JFrame frmPirex;
 	JTabbedPane tabbedPane;
-	private JTextField textField;
 	private JTextField textFieldTextFile;
 	private JTextField textFieldTitle;
 	private JTextField textFieldAuthor;
@@ -137,8 +136,9 @@ public class Display {
 		docs.add(new Doc("Monty Python", "Trevor Blake", "00:09 11-16-2021"));
 		docs.add(new Doc("Star Wars", "Trevor Blake", "00:09 11-16-2021"));
 		frmPirex = new JFrame();
+		frmPirex.setTitle("Pirex");
 		frmPirex.setResizable(true);
-		frmPirex.setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\Aman Singh\\git\\Final-Project\\Pirex\\images\\p.png"));
+		frmPirex.setIconImage(Toolkit.getDefaultToolkit().getImage("images/p.png"));
 		frmPirex.getContentPane().setBackground(Color.WHITE);
 		frmPirex.setBackground(new Color(0, 0, 0));
 		frmPirex.setForeground(Color.WHITE);
@@ -170,46 +170,73 @@ public class Display {
 		JTextPane welcomeText = new JTextPane();
 		welcomeText.setFont(new Font("Trebuchet MS", Font.BOLD, 30));
 		welcomeText.setText("                      Welcome to Pirex\r\nPlease click on one of the tabs above to begin");
-		welcomeText.setBounds(69, 179, 650, 97);
+		welcomeText.setBounds(113, 178, 650, 97);
 		welcome.add(welcomeText);
 		
-// Code for " Summarize Documents" page
 
-		JPanel summarize = new JPanel();
-		summarize.setForeground(Color.WHITE);
-		summarize.setBorder(null);
-		summarize.setBackground(Color.WHITE);
-		tabbedPane.addTab("", new ImageIcon("images/summ iconr1.png"), summarize, "Summarized Document View");
+
+		
+//Code for "Search Documents" page
+
+		JPanel search = new JPanel();
+		search.setForeground(Color.WHITE);
+		search.setBorder(null);
+		search.setBackground(Color.WHITE);
+		tabbedPane.addTab("", new ImageIcon("images/sea iconr.png"), search, "Search For Documents");
+		tabbedPane.setEnabledAt(1, true);
 		tabbedPane.setBackgroundAt(1, Color.WHITE);
 		
-		JScrollPane summarizeScrollPane = new JScrollPane();
-		summarizeScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		summarizeScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		summarizeScrollPane.setViewportBorder(new LineBorder(new Color(0, 0, 0), 4));
-		GroupLayout gl_summarize = new GroupLayout(summarize);
-		gl_summarize.setHorizontalGroup(
-			gl_summarize.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_summarize.createSequentialGroup()
-					.addGap(22)
-					.addComponent(summarizeScrollPane, GroupLayout.PREFERRED_SIZE, 827, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(26, Short.MAX_VALUE))
-		);
-		gl_summarize.setVerticalGroup(
-			gl_summarize.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_summarize.createSequentialGroup()
-					.addGap(77)
-					.addComponent(summarizeScrollPane, GroupLayout.PREFERRED_SIZE, 626, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(71, Short.MAX_VALUE))
-		);
+		JButton btnNewButton_1 = new JButton("CLEAR\r\n");
+		btnNewButton_1.setBounds(718, 93, 94, 23);
 		
-		summary = new JTextArea();
-		summary.setWrapStyleWord(true);
-		summary.setLineWrap(true);
-		summary.setEditable(false);
-		summarizeScrollPane.setViewportView(summary);
-		summarize.setLayout(gl_summarize);
-		summary.setText(summaryText(docs));
-		summary.setCaretPosition(0);
+		textField_3 = new JTextField();
+		textField_3.setBounds(108, 89, 604, 30);
+		textField_3.setColumns(10);
+		
+		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(62, 141, 630, 204);
+		scrollPane_1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollPane_1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		
+		JScrollPane scrollPane_2 = new JScrollPane();
+		scrollPane_2.setBounds(33, 388, 813, 325);
+		scrollPane_2.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollPane_2.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		
+		JButton btnNewButton_2 = new JButton("EDIT\r\n");
+		btnNewButton_2.setBounds(718, 212, 94, 23);
+		
+		JButton btnNewButton_3 = new JButton("DELETE");
+		btnNewButton_3.setBounds(718, 270, 94, 23);
+		
+		JLabel lblNewLabel = new JLabel("Query:");
+		lblNewLabel.setBounds(44, 93, 45, 19);
+		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		
+		JLabel lblNewLabel_1 = new JLabel("Retrieved Document:");
+		lblNewLabel_1.setBounds(33, 371, 138, 19);
+		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		search.setLayout(null);
+		search.add(lblNewLabel);
+		search.add(lblNewLabel_1);
+		search.add(scrollPane_1);
+		
+		JList list = new JList();
+		scrollPane_1.setViewportView(list);
+		search.add(textField_3);
+		search.add(btnNewButton_3);
+		search.add(btnNewButton_1);
+		search.add(btnNewButton_2);
+		search.add(scrollPane_2);
+		
+		JTextArea textArea = new JTextArea();
+		scrollPane_2.setViewportView(textArea);
+		
+		JPanel panel = new JPanel();
+		panel.setBorder(new LineBorder(new Color(0, 0, 0)));
+		panel.setBackground(Color.WHITE);
+		panel.setBounds(33, 65, 813, 295);
+		search.add(panel);
 		
 		
 		
@@ -222,6 +249,8 @@ public class Display {
 		load.setBorder(null);
 		load.setBackground(Color.WHITE);
 		tabbedPane.addTab("", new ImageIcon("images/ld iconr.png"), load, "Load Documents Section");
+		
+				tabbedPane.setBackgroundAt(2, Color.WHITE);
 		
 		JLabel lblTextFile = new JLabel("Text File");
 		lblTextFile.setFont(new Font("Tahoma", Font.BOLD, 14));
@@ -329,8 +358,44 @@ public class Display {
 		
 
 		load.setLayout(gl_load);
+		
+// Code for " Summarize Documents" page
 
-		tabbedPane.setBackgroundAt(2, Color.WHITE);
+		JPanel summarize = new JPanel();
+		summarize.setForeground(Color.WHITE);
+		summarize.setBorder(null);
+		summarize.setBackground(Color.WHITE);
+		tabbedPane.addTab("", new ImageIcon("images/summ iconr1.png"), summarize, "Summarized Document View");
+		tabbedPane.setBackgroundAt(3, Color.WHITE);
+		
+		JScrollPane summarizeScrollPane = new JScrollPane();
+		summarizeScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		summarizeScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		summarizeScrollPane.setViewportBorder(new LineBorder(new Color(0, 0, 0), 4));
+		GroupLayout gl_summarize = new GroupLayout(summarize);
+		gl_summarize.setHorizontalGroup(
+			gl_summarize.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_summarize.createSequentialGroup()
+					.addGap(22)
+					.addComponent(summarizeScrollPane, GroupLayout.PREFERRED_SIZE, 827, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(26, Short.MAX_VALUE))
+		);
+		gl_summarize.setVerticalGroup(
+			gl_summarize.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_summarize.createSequentialGroup()
+					.addGap(77)
+					.addComponent(summarizeScrollPane, GroupLayout.PREFERRED_SIZE, 626, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(71, Short.MAX_VALUE))
+		);
+		
+		summary = new JTextArea();
+		summary.setWrapStyleWord(true);
+		summary.setLineWrap(true);
+		summary.setEditable(false);
+		summarizeScrollPane.setViewportView(summary);
+		summarize.setLayout(gl_summarize);
+		summary.setText(summaryText(docs));
+		summary.setCaretPosition(0);
 		
 		
 
@@ -342,21 +407,9 @@ public class Display {
 		help.setBorder(null);
 		help.setBackground(Color.WHITE);
 		tabbedPane.addTab("", new ImageIcon("images/help iconr.png"), help, "Need Help?");
-		tabbedPane.setEnabledAt(3, true);
-		tabbedPane.setDisabledIconAt(3, new ImageIcon("images/help icong.jpg"));
-		tabbedPane.setBackgroundAt(3, Color.WHITE);
-		
-		textField = new JTextField();
-		textField.setColumns(10);
-		
-		//"Search" button next to fillable text box
-		JButton btnNewButton = new JButton("Search Topics");
-		btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 13));
-		
-		//Label next to fillable text box
-		JTextPane txtpnEnterTheTopic = new JTextPane();
-		txtpnEnterTheTopic.setFont(new Font("Tahoma", Font.BOLD, 13));
-		txtpnEnterTheTopic.setText("Enter the topic you would like help with:");
+		tabbedPane.setEnabledAt(4, true);
+		tabbedPane.setDisabledIconAt(4, new ImageIcon("images/help icong.jpg"));
+		tabbedPane.setBackgroundAt(4, Color.WHITE);
 		
 		//Scroll pane that displays search topic results when "Search Topics" button is clicked
 		JScrollPane scrollPane = new JScrollPane();
@@ -364,178 +417,39 @@ public class Display {
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		
-		//Creates hyperlink with label "About" page. This will be a pop-up window.
-		JLabel hyperlink = new JLabel("About Pyrex");
-		hyperlink.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				
-			}
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				hyperlink.setText("<html><a href=''>About Pyrex</a></html>");
-			}
-			@Override
-			public void mouseExited(MouseEvent e) {
-				hyperlink.setText("About Pyrex");
-			}
-		});
-		hyperlink.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		hyperlink.setForeground(new Color(51, 153, 255));
-		hyperlink.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		
-		//Will become link that generates a window pop-up, or will display text in the scrollpane display box
-		JLabel howToSearch_hyperlink = new JLabel("How to search for documents");
-		howToSearch_hyperlink.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-			}
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				howToSearch_hyperlink.setText("<html><a href=''>How to search for documents</a></html>");
-			}
-			@Override
-			public void mouseExited(MouseEvent e) {
-				howToSearch_hyperlink.setText("How to search for documents");
-			}
-		});
-		howToSearch_hyperlink.setForeground(new Color(51, 153, 255));
-		howToSearch_hyperlink.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		howToSearch_hyperlink.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		
-		//Will become link that generates a window pop-up, or will display text in the scrollpane display box
-		JLabel howToLoad_hyperlink = new JLabel("How to load documents");
-		howToLoad_hyperlink.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-			}
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				howToLoad_hyperlink.setText("<html><a href=''>How to load documents</a></html>");
-			}
-			@Override
-			public void mouseExited(MouseEvent e) {
-				howToLoad_hyperlink.setText("How to load documents");
-			}
-		});
-		howToLoad_hyperlink.setForeground(new Color(51, 153, 255));
-		howToLoad_hyperlink.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		howToLoad_hyperlink.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		JLabel lblNewLabel_2 = new JLabel("About / Frequently Asked Questions");
+		lblNewLabel_2.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		
 		GroupLayout gl_help = new GroupLayout(help);
 		gl_help.setHorizontalGroup(
 			gl_help.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_help.createSequentialGroup()
-					.addGroup(gl_help.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_help.createSequentialGroup()
-							.addGap(45)
-							.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 781, Short.MAX_VALUE))
-						.addGroup(gl_help.createSequentialGroup()
-							.addGap(26)
-							.addComponent(txtpnEnterTheTopic, GroupLayout.PREFERRED_SIZE, 149, GroupLayout.PREFERRED_SIZE)
-							.addGap(32)
-							.addComponent(textField, GroupLayout.PREFERRED_SIZE, 474, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
-							.addComponent(btnNewButton)))
+					.addGap(45)
+					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 781, Short.MAX_VALUE)
 					.addGap(49))
 				.addGroup(gl_help.createSequentialGroup()
-					.addGap(95)
-					.addGroup(gl_help.createParallelGroup(Alignment.LEADING)
-						//relevant to "About Pyrex" hyperlink	
-						.addComponent(hyperlink, GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
-						//
-						.addComponent(howToSearch_hyperlink, GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
-						.addComponent(howToLoad_hyperlink, GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE))
-					.addContainerGap(545, GroupLayout.PREFERRED_SIZE))
+					.addGap(54)
+					.addComponent(lblNewLabel_2, GroupLayout.PREFERRED_SIZE, 377, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(444, Short.MAX_VALUE))
 		);
-		
 		gl_help.setVerticalGroup(
 			gl_help.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_help.createSequentialGroup()
-					.addGap(58)
-					.addGroup(gl_help.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_help.createParallelGroup(Alignment.BASELINE)
-							.addComponent(textField, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
-							.addComponent(btnNewButton))
-						.addComponent(txtpnEnterTheTopic, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					//relevant to "About Pyrex" hyperlink
-					.addGap(58)
-					.addComponent(hyperlink, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE)
-					//
+				.addGroup(Alignment.TRAILING, gl_help.createSequentialGroup()
+					.addContainerGap(96, Short.MAX_VALUE)
+					.addComponent(lblNewLabel_2, GroupLayout.PREFERRED_SIZE, 41, GroupLayout.PREFERRED_SIZE)
 					.addGap(18)
-					.addComponent(howToSearch_hyperlink)
-					.addGap(18)
-					.addComponent(howToLoad_hyperlink)
-					.addPreferredGap(ComponentPlacement.RELATED, 124, Short.MAX_VALUE)
-					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 268, GroupLayout.PREFERRED_SIZE)
+					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 485, GroupLayout.PREFERRED_SIZE)
 					.addGap(134))
 		);
+		
+		JTextArea txtrPirexIsA = new JTextArea();
+		txtrPirexIsA.setWrapStyleWord(true);
+		txtrPirexIsA.setText("           Pirex is a document retrieval program! It includes the following features: \r\n\r\n\t                              Load Documents\r\n\t                         Edit and Delete Documents\r\n\t                            Search for Documents \r\n\t                           Included Summary Page\r\n\r\n               Pirex was designed and developed by the Scrum Team, We Don't Byte!\r\n\r\n\t\t\t    Credit to the members included below:\r\n                                      Victoria Larson\r\n                                      Oksana Daniliuk\r\n                                        Trevor Blake\r\n                                        Justin Roome\r\n                                       Fernando Ramos\r\n                                        Hartej Singh\r\n                                       Amanjot Singh\r\n                                      Ganesh Renukunta\r\n\r\n----------------------------------------------------------------------------------------------\r\n\r\n* How to SEARCH For Documents in Pirex: *\r\n\r\nTo search for a document in Pirex, follow the following steps:\r\n\r\n1. Click the \"SEARCH\" Navigational Tab at the top of the screen.\r\n\r\n2. Type the title or the author of the desired document in the text box next to \"Query\".\r\n\r\n3. Press \"Enter\" on your keyboard.\r\n\r\n4. A list of documents with that same author or similar title will show up in the display text box.\r\n\r\nFor a New Search:\r\n\r\n1. Press the \"CLEAR\" button at the top of the page next to the fillable search box.\r\n\r\n----------------------------------------------------------------------------------------------\r\n\r\n* How to LOAD Documents into Pirex: *\r\n\r\nTo load a document in Pirex, follow the following steps:\r\n\r\n1. Click the \"LOAD\" Navigational Tab at the top of the screen.\r\n\r\n2. Click the \"BROWSE\" button towards the top of the screen, beneath the Navigational Tabs.\r\n\r\n3. A file explorer window will appear. Locate and select the desired text document.\r\n\r\n4. Click \"Save\".\r\n\r\n5. The filepath of the selected document should now appear in the text box next to the \"BROWSE\" button.\r\n\r\n6. Type the title and author of the selected document into the respective fillable text boxes.\r\n\r\n7. Click the \"PROCESS\" button, next to the \"Author\" text box.\r\n\r\n8. The display text box at the bottom half of the window will show the document being processed.\r\n\r\n9. Once the display text box shows the words \"Uploaded Successfully!\", the file is now in the Pirex database.\r\n\r\n----------------------------------------------------------------------------------------------\r\n\r\n* How to EDIT Documents in Pirex: *\r\n\r\nTo edit a document in Pirex, follow the following steps:\r\n\r\n1. Make sure you've logged into Pirex with your Admin credentials to gain Admin privileges.\r\n\r\n2. Click the \"SEARCH\" tab at the top of the screen.\r\n\r\n3. Type the title or the author of the desired document in the text box next to \"Query\".\r\n\r\n4. Press \"Enter\" on your keyboard.\r\n\r\n5. A list of documents with that same author or similar title will show up in the display text box.\r\n\r\n6. Select the desired document from the search results by clicking on it.\r\n\r\n7. The document will be opned in your default text editor\r\n\r\n8. Make your changes.\r\n\r\nTo Save the Changes in Pirex:\r\n\r\n1. In your text editor, click \"File\".\r\n\r\n2. Click \"Save\", not \"Save As\".\r\n\r\n3. The document will be updated in Pirex. \r\n\r\n----------------------------------------------------------------------------------------------\r\n\r\n* How to REMOVE Documents in Pirex: *\r\n\r\nTo remove document from Pirex, follow the following steps:\r\n\r\n1. Make sure you've logged into Pirex with your Admin credentials to gain Admin privileges.\r\n\r\n2. Click the \"SEARCH\" tab at the top of the screen.\r\n\r\n3. Type the title or the author of the desired document in the text box next to \"Query\".\r\n\r\n4. Press \"Enter\" on your keyboard.\r\n\r\n5. A list of documents with that same author or similar title will show up in the display text box.\r\n\r\n6. Select the desired document from the search results by clicking on it.\r\n\r\n7. Click the \"DELETE\" button to the right of the search results box, under the \"EDIT\" button.\r\n\r\n8. The document you had selected will now be removed from the Pirex database, and will no longer show up in search results.\r\n\r\n----------------------------------------------------------------------------------------------\r\n");
+		txtrPirexIsA.setEditable(false);
+		txtrPirexIsA.setLineWrap(true);
+		scrollPane.setViewportView(txtrPirexIsA);
+		txtrPirexIsA.setCaretPosition(0);
 		help.setLayout(gl_help);
-		
-
-
-		
-//Code for "Search Documents" page
-
-		JPanel search = new JPanel();
-		search.setForeground(Color.WHITE);
-		search.setBorder(null);
-		search.setBackground(Color.WHITE);
-		tabbedPane.addTab("", new ImageIcon("images/sea iconr.png"), search, "Search For Documents");
-		tabbedPane.setEnabledAt(4, true);
-		tabbedPane.setBackgroundAt(4, Color.WHITE);
-		
-		JButton btnNewButton_1 = new JButton("CLEAR\r\n");
-		btnNewButton_1.setBounds(718, 93, 94, 23);
-		
-		textField_3 = new JTextField();
-		textField_3.setBounds(108, 89, 604, 30);
-		textField_3.setColumns(10);
-		
-		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(62, 141, 630, 204);
-		scrollPane_1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		scrollPane_1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		
-		JScrollPane scrollPane_2 = new JScrollPane();
-		scrollPane_2.setBounds(33, 388, 813, 325);
-		scrollPane_2.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		scrollPane_2.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		
-		JButton btnNewButton_2 = new JButton("EDIT\r\n");
-		btnNewButton_2.setBounds(718, 212, 94, 23);
-		
-		JButton btnNewButton_3 = new JButton("DELETE");
-		btnNewButton_3.setBounds(718, 270, 94, 23);
-		
-		JLabel lblNewLabel = new JLabel("Query:");
-		lblNewLabel.setBounds(44, 93, 45, 19);
-		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		
-		JLabel lblNewLabel_1 = new JLabel("Retrieved Document:");
-		lblNewLabel_1.setBounds(33, 371, 138, 19);
-		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		search.setLayout(null);
-		search.add(lblNewLabel);
-		search.add(lblNewLabel_1);
-		search.add(scrollPane_1);
-		
-		JList list = new JList();
-		scrollPane_1.setViewportView(list);
-		search.add(textField_3);
-		search.add(btnNewButton_3);
-		search.add(btnNewButton_1);
-		search.add(btnNewButton_2);
-		search.add(scrollPane_2);
-		
-		JTextArea textArea = new JTextArea();
-		scrollPane_2.setViewportView(textArea);
-		
-		JPanel panel = new JPanel();
-		panel.setBorder(new LineBorder(new Color(0, 0, 0)));
-		panel.setBackground(Color.WHITE);
-		panel.setBounds(33, 65, 813, 295);
-		search.add(panel);
 
 	}
 

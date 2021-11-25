@@ -2,7 +2,11 @@ package Data;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
+
+
 
 public class Doc 
 {
@@ -81,13 +85,40 @@ public class Doc
     
     public String shortForm(String keyword) // formatting for short form displays
     {
-    	return null;
+    	String s = "";
+    	String sub = "";
+    	String tempText = text.replace("\r\n", " ");
+    	tempText.replace("\n", " ");
+    	ArrayList<String> textList = new ArrayList<String>();
+    	String[] textArr = tempText.split(" ");
+
+    	Collections.addAll(textList, textArr);
+    	int keyIndex = textList.indexOf(keyword);
+    	
+    	for(int i = keyIndex-5; i < keyIndex+6; i++)
+    	{
+    		if (i < 0 || i > textList.size())
+    		{
+    			sub+= "";
+    		}
+    		
+    		else
+    		{
+    			sub+= textList.get(i) + " ";
+    		}
+    	}
+ 
+    	s+= title + ", ";
+    	s+= author + ", ";
+    	s+= date + " - \"";
+    	s+= sub + "\"";
+    	return s;
     }
     
     public String toString() // formatting for long form displays
     {
     	String s = "";
-		s = "Title: " + title;
+		s+= "Title: " + title;
 		s+= "\r\nAuthor: " + author;
 		s+= "\r\nDate Uploaded: " + date + "\r\n";
 		s+= "\r\n" + this.text + "\r\n\r\n";

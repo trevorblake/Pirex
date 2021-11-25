@@ -36,6 +36,7 @@ import java.awt.Component;
 import java.awt.Cursor;
 
 import javax.swing.Box;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JRadioButtonMenuItem;
 import java.awt.Toolkit;
 import java.awt.Window.Type;
@@ -54,6 +55,7 @@ import javax.swing.border.BevelBorder;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.ListModel;
 import javax.swing.border.LineBorder;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -138,7 +140,7 @@ public class Display {
 		docs.add(new Doc("Star Wars", "Trevor Blake", "00:09 11-16-2021"));
 		frmPirex = new JFrame();
 		frmPirex.setTitle("Pirex");
-		frmPirex.setResizable(true);
+		frmPirex.setResizable(false);
 		frmPirex.setIconImage(Toolkit.getDefaultToolkit().getImage("images/p.png"));
 		frmPirex.getContentPane().setBackground(Color.WHITE);
 		frmPirex.setBackground(new Color(0, 0, 0));
@@ -200,7 +202,7 @@ public class Display {
 		scrollPane_1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		
 		JScrollPane scrollPane_2 = new JScrollPane();
-		scrollPane_2.setBounds(33, 388, 813, 325);
+		scrollPane_2.setBounds(33, 388, 813, 311);
 		scrollPane_2.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollPane_2.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		
@@ -222,7 +224,10 @@ public class Display {
 		search.add(lblNewLabel_1);
 		search.add(scrollPane_1);
 		
-		JList list = new JList();
+		String[] arr = {docs.get(0).shortForm("coconut")};
+		JList list = new JList(arr);
+		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
 		scrollPane_1.setViewportView(list);
 		search.add(textField_3);
 		search.add(btnNewButton_3);
@@ -360,6 +365,7 @@ public class Display {
 		
 
 		load.setLayout(gl_load);
+		textFieldScroll.setText(docs.get(0).shortForm("coconut")); // TESTER
 		
 // Code for " Summarize Documents" page
 
@@ -619,4 +625,31 @@ public class Display {
 		}
 	}
 	
+	public class MyCellRenderer extends DefaultListCellRenderer
+    {
+        final JPanel p = new JPanel(new BorderLayout());
+        final JPanel IconPanel = new JPanel(new BorderLayout());
+        final JLabel l = new JLabel("icon"); //<-- this will be an icon instead of a text
+        final JLabel lt = new JLabel();
+        String pre = "<html><body style='width: 200px;'>";
+
+        MyCellRenderer() {
+            //icon
+            IconPanel.add(l, BorderLayout.NORTH);
+            p.add(IconPanel, BorderLayout.WEST);
+
+            p.add(lt, BorderLayout.CENTER);
+            //text
+        }
+
+        @Override
+        public Component getListCellRendererComponent(final JList list, final Object value, final int index, final boolean isSelected, final boolean hasFocus)
+        {
+            final String text = (String) value;
+            lt.setText(pre + text);
+
+            return p;
+        }
+    }
 }
+

@@ -365,7 +365,6 @@ public class Display {
 		
 
 		load.setLayout(gl_load);
-		textFieldScroll.setText(docs.get(0).shortForm("coconut")); // TESTER
 		
 // Code for " Summarize Documents" page
 

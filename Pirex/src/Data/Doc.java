@@ -104,7 +104,15 @@ public class Doc
     		
     		else
     		{
+    			if(i == keyIndex +5)
+    			{
+    				sub+= textList.get(i);
+    			}
+    			
+    			else
+    			{
     			sub+= textList.get(i) + " ";
+    			}
     		}
     	}
  

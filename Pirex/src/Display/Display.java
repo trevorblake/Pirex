@@ -47,6 +47,7 @@ import com.jgoodies.forms.layout.RowSpec;
 
 import Data.Doc;
 
+
 import javax.swing.DropMode;
 
 import javax.swing.UIManager;
@@ -68,15 +69,21 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.lang.ProcessHandle.Info;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Scanner;
+import java.util.StringTokenizer;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
@@ -135,9 +142,9 @@ public class Display {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+
+		load();
 		
-		docs.add(new Doc("Monty Python", "Trevor Blake", "00:09 11-16-2021"));
-		docs.add(new Doc("Star Wars", "Trevor Blake", "00:09 11-16-2021"));
 		frmPirex = new JFrame();
 		frmPirex.setTitle("Pirex");
 		frmPirex.setResizable(false);
@@ -224,7 +231,7 @@ public class Display {
 		search.add(lblNewLabel_1);
 		search.add(scrollPane_1);
 		
-		String[] arr = {docs.get(0).shortForm("coconut")};
+		String[] arr = {docs.get(1).shortForm("He became so")};
 		JList list = new JList(arr);
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
@@ -516,6 +523,7 @@ public class Display {
 		loadTimer(loadInfo);
 		summary.setText(summaryText(docs));
 		summary.setCaretPosition(0);
+		save();
 	}
 	
 	private static void copy(File source, File dest) throws IOException {
@@ -565,6 +573,51 @@ public class Display {
 	
 	public void load()
 	{
+		File documents = new File("PirexData/documents.txt");
+		Scanner d;
+		try {
+			d = new Scanner(documents);
+			
+			while (d.hasNextLine())
+			{
+				String raw = d.nextLine();
+				StringTokenizer st = new StringTokenizer(raw, "*");
+				String title = st.nextToken();
+				String author = st.nextToken();
+				String date = st.nextToken();
+				Path path = Paths.get("PirexData/" + title + ".txt");			
+				if(Files.exists(path)) 
+				{ 
+					docs.add(new Doc(title, author, date));
+				}
+
+			}
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+	
+	public void save()
+	{
+		FileWriter myWriter;
+		try {
+			myWriter = new FileWriter("PirexData/documents.txt", false);
+			
+			for(int i = 0; i < docs.size(); i++)
+			{
+				myWriter.write(docs.get(i).getTitle() + "*" + docs.get(i).getAuthor() + "*" + docs.get(i).getDate());
+				myWriter.write(System.getProperty( "line.separator" ));
+			}
+			
+			myWriter.close();
+		
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 	
@@ -622,33 +675,6 @@ public class Display {
 		{
 			loadInfo.add(".");
 		}
-	}
-	
-	public class MyCellRenderer extends DefaultListCellRenderer
-    {
-        final JPanel p = new JPanel(new BorderLayout());
-        final JPanel IconPanel = new JPanel(new BorderLayout());
-        final JLabel l = new JLabel("icon"); //<-- this will be an icon instead of a text
-        final JLabel lt = new JLabel();
-        String pre = "<html><body style='width: 200px;'>";
-
-        MyCellRenderer() {
-            //icon
-            IconPanel.add(l, BorderLayout.NORTH);
-            p.add(IconPanel, BorderLayout.WEST);
-
-            p.add(lt, BorderLayout.CENTER);
-            //text
-        }
-
-        @Override
-        public Component getListCellRendererComponent(final JList list, final Object value, final int index, final boolean isSelected, final boolean hasFocus)
-        {
-            final String text = (String) value;
-            lt.setText(pre + text);
-
-            return p;
-        }
-    }
+	}	
 }
 

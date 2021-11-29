@@ -3,8 +3,12 @@ package Data;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Enumeration;
+import java.util.List;
 import java.util.Scanner;
+import java.util.Vector;
 
 
 
@@ -87,40 +91,54 @@ public class Doc
     {
     	String s = "";
     	String sub = "";
-    	String tempText = text.replace("\r\n", " ");
-    	tempText.replace("\n", " ");
+    	Boolean t = true;
+    	ArrayList<String> textWords = new ArrayList<String>();
+    	String[] keys = keyword.split(" ");
+    	String textOnlySpaces = text.replaceAll("\\R+", " ").replaceAll("  ", " ");
+    	String[] textArr = textOnlySpaces.split(" ");
     	ArrayList<String> textList = new ArrayList<String>();
-    	String[] textArr = tempText.split(" ");
-
     	Collections.addAll(textList, textArr);
-    	int keyIndex = textList.indexOf(keyword);
+    	Enumeration<Boolean> together;
+    	Vector<Boolean> f = new Vector<Boolean>();
+
     	
-    	for(int i = keyIndex-5; i < keyIndex+6; i++)
+    	if (text.contains(keyword))
     	{
-    		if (i < 0 || i > textList.size())
-    		{
-    			sub+= "";
-    		}
-    		
-    		else
-    		{
-    			if(i == keyIndex +5)
-    			{
-    				sub+= textList.get(i);
-    			}
-    			
-    			else
-    			{
-    			sub+= textList.get(i) + " ";
-    			}
-    		}
+    		int keyIndex = textList.indexOf(keys[0]);
+
+    	    for(int i = keyIndex - 5; i < keyIndex + 6; i++)
+    	    {
+    	    	
+    	        if (i < 0 || i > textList.size())
+    	        {
+    	           sub+= "";
+    	        }
+    	            
+    	        else
+    	        {
+    	            if(i == keyIndex +5)
+    	            {
+    	                sub+= textList.get(i);
+    	            }
+    	                
+    	            else
+    	            {
+    	            	sub+= textList.get(i) + " ";
+    	            }
+    	        }
+    	    } 
+    	    
+	        s+= title + ", ";
+	        s+= author + ", ";
+	        s+= date + " - \"";
+	        s+= sub + "\"";
+	        return s;
     	}
- 
-    	s+= title + ", ";
-    	s+= author + ", ";
-    	s+= date + " - \"";
-    	s+= sub + "\"";
-    	return s;
+    	
+    	else
+    	{
+    		return "No Documents Found";
+    	}
     }
     
     public String toString() // formatting for long form displays

@@ -250,6 +250,7 @@ public class Display {
 		search.add(scrollPane_2);
 		
 		JTextArea textArea = new JTextArea();
+		textArea.setEditable(false);
 		scrollPane_2.setViewportView(textArea);
 		
 		JPanel panel = new JPanel();
@@ -292,6 +293,7 @@ public class Display {
 		
 		
 		JScrollPane scrollPaneLoadState = new JScrollPane();
+		textFieldScroll.setEditable(false);
 		scrollPaneLoadState.setViewportView(textFieldScroll);
 		
 		JButton btnBrowse = new JButton("BROWSE");

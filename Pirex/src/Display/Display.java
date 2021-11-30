@@ -218,6 +218,13 @@ public class Display {
 		
 		JButton btnNewButton_3 = new JButton("DELETE");
 		btnNewButton_3.setBounds(718, 270, 94, 23);
+		btnNewButton_3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				delete();
+				JOptionPane.showMessageDialog(null,"The file you selected has been deleted.");
+			}
+		});
 		
 		JLabel lblNewLabel = new JLabel("Query:");
 		lblNewLabel.setBounds(44, 93, 45, 19);
@@ -676,5 +683,8 @@ public class Display {
 			loadInfo.add(".");
 		}
 	}	
+	public void delete() {
+		
+	}
 }
 

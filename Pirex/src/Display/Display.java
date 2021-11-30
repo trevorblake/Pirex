@@ -219,6 +219,20 @@ public class Display {
 		
 		JButton btnNewButton_2 = new JButton("EDIT\r\n");
 		btnNewButton_2.setBounds(718, 212, 94, 23);
+	
+		btnNewButton_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					  
+		            File file = new File("PirexData/Monty Python.txt");
+		  
+		           java.awt.Desktop.getDesktop().edit(file);
+		        }
+		        catch (Exception exc) {
+		            JOptionPane.showMessageDialog(btnNewButton_2, exc.getMessage());
+		        }
+			}
+		});
 		
 		JButton btnNewButton_3 = new JButton("DELETE");
 		btnNewButton_3.setBounds(718, 270, 94, 23);
@@ -251,7 +265,7 @@ public class Display {
 		String[] arr = {docs.get(1).shortForm("He became so")};
 		model.addElement(arr[0]);
 		//JList list = new JList(arr);
-		String[] arr = {docs.get(1).shortForm("He became so")};
+		//String[] arr = {docs.get(1).shortForm("He became so")};
 		JList list = new JList(arr);
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
@@ -700,7 +714,7 @@ public class Display {
 
 	public void deleteFile() {
 		//File file = fc.getSelectedFile();
-		int selectedIndex = list.getSelectedIndex();
+		/*int selectedIndex = list.getSelectedIndex();
 		File file = new File(docs.get(selectedIndex).getLocation());
 		if (selectedIndex != -1) {
 			int choice = JOptionPane.showConfirmDialog(frmPirex,"Are you sure you want to delete?", "Select an Option" , JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
@@ -713,9 +727,9 @@ public class Display {
 			else {
 				return;
 			}
-		}
+		}*/
 	}
-        @Override
+      /*  @Override
         public Component getListCellRendererComponent(final JList list, final Object value, final int index, final boolean isSelected, final boolean hasFocus)
         {
             final String text = (String) value;
@@ -732,6 +746,6 @@ public class Display {
 
             return p;
         }
-    }
+    }*/
 }
 

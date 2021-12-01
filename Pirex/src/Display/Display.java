@@ -261,7 +261,7 @@ public class Display {
 		search.add(lblNewLabel_1);
 		search.add(scrollPane_1);
 		
-		String[] arr = {docs.get(0).shortForm("He became so")};
+		String[] arr = {docs.get(0).shortForm("coconut")};
 		model.addElement(arr[0]);
 		//JList list = new JList(arr);
 		//String[] arr = {docs.get(1).shortForm("He became so")};

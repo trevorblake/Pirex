@@ -1,10 +1,11 @@
 package Pirex;
+import Display.Login;
 
 public class Driver {
 	public static void main(String[] args)
 	{
-		System.out.println("We got this!!!");
-		System.out.println("Example Message by Victoria.");
+		Driver d = new Driver();
+		Login.main(args);
 	
 	}
 }

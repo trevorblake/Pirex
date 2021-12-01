@@ -1,12 +1,13 @@
 package Display;
 
+import Data.User;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.concurrent.TimeUnit;
 
-final class Login extends JFrame implements ActionListener {
+public final class Login extends JFrame implements ActionListener {
 
     /**
 	 * 
@@ -79,7 +80,7 @@ final class Login extends JFrame implements ActionListener {
             String pwdText;
             userText = userTextField.getText();
             pwdText = passwordField.getText();
-            if (userText.equalsIgnoreCase("a") && pwdText.equalsIgnoreCase("b")) {
+            if (userText.equalsIgnoreCase(User.getUser()) && pwdText.equalsIgnoreCase(User.getPass())) {
                 try
                 {
                     Thread.sleep(3000);

@@ -4,70 +4,31 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import java.awt.BorderLayout;
-import net.miginfocom.swing.MigLayout;
 import javax.swing.JTabbedPane;
 import javax.swing.JLabel;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 import javax.swing.Timer;
-
 import java.awt.Color;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
 import java.awt.Font;
-import javax.swing.JToggleButton;
 import javax.swing.JTextArea;
 import javax.swing.ImageIcon;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
-import java.awt.Dialog.ModalExclusionType;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JTextPane;
-import javax.swing.JDesktopPane;
 import javax.swing.JFileChooser;
-import javax.swing.JToolBar;
-import java.awt.GridLayout;
-import javax.swing.border.EtchedBorder;
 import javax.swing.border.EmptyBorder;
-import java.awt.Component;
-import java.awt.Cursor;
-
-import javax.swing.Box;
-import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
-import javax.swing.JRadioButtonMenuItem;
 import java.awt.Toolkit;
-import java.awt.Window.Type;
-import java.awt.Dimension;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.RowSpec;
-
 import Data.Doc;
-
-
-import javax.swing.DropMode;
-
 import javax.swing.UIManager;
-import javax.swing.border.BevelBorder;
-
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.LayoutStyle.ComponentPlacement;
-import javax.swing.ListModel;
 import javax.swing.border.LineBorder;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
-import javax.swing.AbstractListModel;
 import javax.swing.ListSelectionModel;
-import java.awt.Panel;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -75,10 +36,7 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.lang.ProcessHandle.Info;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -104,11 +62,7 @@ public class Display {
 	JTextArea summary = new JTextArea();
 	private int index = 0;
 	private Timer timer;
-	private JTextField textField_1;
-	private JTextField textField_2;
 	private JTextField textField_3;
-
-	
 	private JFileChooser fc = new JFileChooser();
 	private ArrayList<String> loadInfo = new ArrayList<>();
 	private ArrayList<Doc> docs = new ArrayList<>();
@@ -165,11 +119,8 @@ public class Display {
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBackground(Color.WHITE);
 		tabbedPane.setBorder(new EmptyBorder(0, 0, 0, 0));
-
 		tabbedPane.setBounds(0, 0, 797, 800);
-
 		tabbedPane.setBounds(0, 0, 880, 802);
-
 		frmPirex.getContentPane().add(tabbedPane);
 		
 		        
@@ -244,8 +195,6 @@ public class Display {
 				deleteFile();
 			}
 		});
-		
-
 		
 		JLabel lblNewLabel = new JLabel("Query:");
 		lblNewLabel.setBounds(44, 93, 45, 19);

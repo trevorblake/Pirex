@@ -34,21 +34,11 @@ public class Doc
     public String getTitle()
     {
 		return this.title;	
-    }
-    
-    public void setTitle(String title)
-    {
-    	this.title = title;
-    }
+    } 
     
     public String getAuthor()
     {
 		return this.author;	
-    }
-    
-    public void setAuthor(String author)
-    {
-    	this.author = author;
     }
     
     public String getDate()
@@ -91,15 +81,12 @@ public class Doc
     {
     	String s = "";
     	String sub = "";
-    	Boolean t = true;
-    	ArrayList<String> textWords = new ArrayList<String>();
+
     	String[] keys = keyword.split(" ");
     	String textOnlySpaces = text.replaceAll("\\R+", " ").replaceAll("  ", " ");
     	String[] textArr = textOnlySpaces.split(" ");
     	ArrayList<String> textList = new ArrayList<String>();
     	Collections.addAll(textList, textArr);
-    	Enumeration<Boolean> together;
-    	Vector<Boolean> f = new Vector<Boolean>();
 
     	
     	if (text.contains(keyword))
@@ -132,13 +119,9 @@ public class Doc
 	        s+= author + ", ";
 	        s+= date + " - \"";
 	        s+= sub + "\"";
-	        return s;
     	}
     	
-    	else
-    	{
-    		return "No Documents Found";
-    	}
+    	return s;
     }
     
     public String toString() // formatting for long form displays

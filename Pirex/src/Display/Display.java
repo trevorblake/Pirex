@@ -111,7 +111,6 @@ public class Display {
 	private ArrayList<Doc> docs = new ArrayList<>();
 	private DefaultListModel<String> model = new DefaultListModel<String>();
 	private JList<String> list = new JList<String>(model);
-	//private JOptionPane deleteOption = new JOptionPane();
 	
 
 	/**
@@ -262,11 +261,11 @@ public class Display {
 		search.add(lblNewLabel_1);
 		search.add(scrollPane_1);
 		
-		String[] arr = {docs.get(1).shortForm("He became so")};
+		String[] arr = {docs.get(0).shortForm("He became so")};
 		model.addElement(arr[0]);
 		//JList list = new JList(arr);
 		//String[] arr = {docs.get(1).shortForm("He became so")};
-		JList list = new JList(arr);
+		//JList list = new JList(arr);
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		scrollPane_1.setViewportView(list);
@@ -713,12 +712,11 @@ public class Display {
 	}
 
 	public void deleteFile() {
-		//File file = fc.getSelectedFile();
-		/*int selectedIndex = list.getSelectedIndex();
-		File file = new File(docs.get(selectedIndex).getLocation());
+		int selectedIndex = list.getSelectedIndex();
 		if (selectedIndex != -1) {
 			int choice = JOptionPane.showConfirmDialog(frmPirex,"Are you sure you want to delete?", "Select an Option" , JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
 			if (choice == 0) {
+				File file = new File(docs.get(selectedIndex).getLocation());
 				model.remove(selectedIndex);
 				file.delete();
 				save();
@@ -727,7 +725,7 @@ public class Display {
 			else {
 				return;
 			}
-		}*/
+		}
 	}
       /*  @Override
         public Component getListCellRendererComponent(final JList list, final Object value, final int index, final boolean isSelected, final boolean hasFocus)

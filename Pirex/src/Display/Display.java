@@ -59,6 +59,8 @@ import javax.swing.JButton;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.ListModel;
 import javax.swing.border.LineBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.AbstractListModel;
@@ -222,24 +224,18 @@ public class Display {
 	
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
 				try {
-					  
-		            File file = new File("PirexData/Monty Python.txt");
-		            save();
-		  
-		            java.awt.Desktop.getDesktop().edit(file);
-		        }
-		        catch (Exception exc) {
-		            JOptionPane.showMessageDialog(btnNewButton_2, exc.getMessage());
-		        }
+					editFile();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
 		
 		JButton btnNewButton_3 = new JButton("DELETE");
 		btnNewButton_3.setBounds(718, 270, 94, 23);
-		
-		//String[] arr = {docs.get(0).shortForm("coconut")};
-		//model.addElement(arr[0]);
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		btnNewButton_3.addActionListener(new ActionListener() {
@@ -263,11 +259,9 @@ public class Display {
 		search.add(lblNewLabel_1);
 		search.add(scrollPane_1);
 		
-		String[] arr = {docs.get(0).shortForm("coconut")};
+		String[] arr = {docs.get(0).shortForm("the"), docs.get(1).shortForm("the")};
 		model.addElement(arr[0]);
-		//JList list = new JList(arr);
-		//String[] arr = {docs.get(1).shortForm("He became so")};
-		//JList list = new JList(arr);
+		model.addElement(arr[1]);
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		scrollPane_1.setViewportView(list);
@@ -734,23 +728,25 @@ public class Display {
 			}
 		}
 	}
-      /*  @Override
-        public Component getListCellRendererComponent(final JList list, final Object value, final int index, final boolean isSelected, final boolean hasFocus)
-        {
-            final String text = (String) value;
-            lt.setText(pre + text);
+	
+	public void editFile() throws IOException {
+		int selectedIndex = list.getSelectedIndex();
+		if (selectedIndex != -1) {
+            File file = new File(docs.get(selectedIndex).getLocation());
+            java.awt.Desktop.getDesktop().edit(file);
+            Object[] options = {"OK"};
+            int n = JOptionPane.showOptionDialog(frmPirex,"Click OK when after saving the document.", "Finished Editing?", JOptionPane.PLAIN_MESSAGE, JOptionPane.QUESTION_MESSAGE, null, options, null);
 
-            return p;
-        }
-    }
-        @Override
-        public Component getListCellRendererComponent(final JList list, final Object value, final int index, final boolean isSelected, final boolean hasFocus)
-        {
-            final String text = (String) value;
-            lt.setText(pre + text);
+            if (n == 0 || n == JOptionPane.CLOSED_OPTION)
+            {
+            	save();
+            }
 
-            return p;
         }
-    }*/
+			else {
+				return;
+			}
+	}
+	
 }
 

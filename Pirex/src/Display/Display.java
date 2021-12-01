@@ -111,6 +111,7 @@ public class Display {
 	private ArrayList<Doc> docs = new ArrayList<>();
 	private DefaultListModel<String> model = new DefaultListModel<String>();
 	private JList<String> list = new JList<String>(model);
+	//private JOptionPane deleteOption = new JOptionPane();
 	
 
 	/**
@@ -209,12 +210,12 @@ public class Display {
 		JScrollPane scrollPane_1 = new JScrollPane();
 		scrollPane_1.setBounds(62, 141, 630, 204);
 		scrollPane_1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		scrollPane_1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPane_1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		
 		JScrollPane scrollPane_2 = new JScrollPane();
+		scrollPane_2.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane_2.setBounds(33, 388, 813, 311);
 		scrollPane_2.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		scrollPane_2.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		
 		JButton btnNewButton_2 = new JButton("EDIT\r\n");
 		btnNewButton_2.setBounds(718, 212, 94, 23);
@@ -233,6 +234,8 @@ public class Display {
 			}
 		});
 		
+
+		
 		JLabel lblNewLabel = new JLabel("Query:");
 		lblNewLabel.setBounds(44, 93, 45, 19);
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -245,9 +248,11 @@ public class Display {
 		search.add(lblNewLabel_1);
 		search.add(scrollPane_1);
 		
-		String[] arr = {docs.get(0).shortForm("He became so")};
+		String[] arr = {docs.get(1).shortForm("He became so")};
 		model.addElement(arr[0]);
 		//JList list = new JList(arr);
+		String[] arr = {docs.get(1).shortForm("He became so")};
+		JList list = new JList(arr);
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		scrollPane_1.setViewportView(list);
@@ -258,6 +263,7 @@ public class Display {
 		search.add(scrollPane_2);
 		
 		JTextArea textArea = new JTextArea();
+		textArea.setEditable(false);
 		scrollPane_2.setViewportView(textArea);
 		
 		JPanel panel = new JPanel();
@@ -690,7 +696,8 @@ public class Display {
 		{
 			loadInfo.add(".");
 		}
-	}	
+	}
+
 	public void deleteFile() {
 		//File file = fc.getSelectedFile();
 		int selectedIndex = list.getSelectedIndex();
@@ -708,5 +715,23 @@ public class Display {
 			}
 		}
 	}
+        @Override
+        public Component getListCellRendererComponent(final JList list, final Object value, final int index, final boolean isSelected, final boolean hasFocus)
+        {
+            final String text = (String) value;
+            lt.setText(pre + text);
+
+            return p;
+        }
+    }
+        @Override
+        public Component getListCellRendererComponent(final JList list, final Object value, final int index, final boolean isSelected, final boolean hasFocus)
+        {
+            final String text = (String) value;
+            lt.setText(pre + text);
+
+            return p;
+        }
+    }
 }
 

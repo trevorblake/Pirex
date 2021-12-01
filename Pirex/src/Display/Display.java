@@ -99,12 +99,13 @@ public class Display {
 	private JTextField textFieldTitle;
 	private JTextField textFieldAuthor;
 	JTextArea textFieldScroll = new JTextArea();
+	JTextArea summary = new JTextArea();
 	private int index = 0;
 	private Timer timer;
 	private JTextField textField_1;
 	private JTextField textField_2;
 	private JTextField textField_3;
-	JTextArea summary;
+
 	
 	private JFileChooser fc = new JFileChooser();
 	private ArrayList<String> loadInfo = new ArrayList<>();
@@ -224,8 +225,9 @@ public class Display {
 				try {
 					  
 		            File file = new File("PirexData/Monty Python.txt");
+		            save();
 		  
-		           java.awt.Desktop.getDesktop().edit(file);
+		            java.awt.Desktop.getDesktop().edit(file);
 		        }
 		        catch (Exception exc) {
 		            JOptionPane.showMessageDialog(btnNewButton_2, exc.getMessage());
@@ -408,6 +410,7 @@ public class Display {
 		load.setLayout(gl_load);
 		
 // Code for " Summarize Documents" page
+		
 
 		JPanel summarize = new JPanel();
 		summarize.setForeground(Color.WHITE);
@@ -464,7 +467,6 @@ public class Display {
 					.addContainerGap(71, Short.MAX_VALUE))
 		);
 		
-		summary = new JTextArea();
 		summary.setWrapStyleWord(true);
 		summary.setLineWrap(true);
 		summary.setEditable(false);
@@ -611,7 +613,7 @@ public class Display {
 		Scanner d;
 		try {
 			d = new Scanner(documents);
-			
+			docs.clear();
 			while (d.hasNextLine())
 			{
 				String raw = d.nextLine();
@@ -631,6 +633,9 @@ public class Display {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		summary.setText(summaryText(docs));
+		summary.setCaretPosition(0);
 
 	}
 	
@@ -652,6 +657,7 @@ public class Display {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		load();
 		
 	}
 	
@@ -718,6 +724,7 @@ public class Display {
 			if (choice == 0) {
 				File file = new File(docs.get(selectedIndex).getLocation());
 				model.remove(selectedIndex);
+				docs.remove(docs.get(selectedIndex));
 				file.delete();
 				save();
 				JOptionPane.showMessageDialog(frmPirex, "Document successfully deleted");

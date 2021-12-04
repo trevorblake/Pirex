@@ -92,7 +92,6 @@ public class Display implements DocumentListener {
 			public void run() {
 				try {
 					privilege = Login.privilege;
-					System.out.println(privilege);
 					Display window = new Display();
 					window.frmPirex.setVisible(true);
 				} catch (Exception e) {
@@ -212,7 +211,7 @@ public class Display implements DocumentListener {
 		btnNewButton_2.setBounds(718, 212, 94, 23);
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+		 		
 				if(privilege == 0)
 				{
 					JOptionPane.showMessageDialog(frmPirex, "Only administrators can edit documents!");
@@ -342,7 +341,15 @@ public class Display implements DocumentListener {
 		btnProcess.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				processing();
+				if(privilege == 0)
+				{
+					JOptionPane.showMessageDialog(frmPirex, "Only administrators can upload documents!");
+				}
+				
+				else
+				{
+					processing();
+				}
 			}
 		});
 		
@@ -428,20 +435,27 @@ public class Display implements DocumentListener {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-				int a = fc.showSaveDialog(null);
-				
-				if (a == JFileChooser.APPROVE_OPTION)
+				if(privilege == 0)
 				{
-					try {
-						copyDirectory(new File("PirexData"), new File(fc.getSelectedFile().getAbsoluteFile()+ "/PirexDataCopy"));
-						JOptionPane.showMessageDialog(null, "PirexData has been copied to " 
-									+ fc.getSelectedFile().getAbsoluteFile(), "Success!", JOptionPane.INFORMATION_MESSAGE);
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+					JOptionPane.showMessageDialog(frmPirex, "Only administrators can upload documents!");
+				}
+				
+				else
+				{
+					fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+					int a = fc.showSaveDialog(null);
+					
+					if (a == JFileChooser.APPROVE_OPTION)
+					{
+						try {
+							copyDirectory(new File("PirexData"), new File(fc.getSelectedFile().getAbsoluteFile()+ "/PirexDataCopy"));
+							JOptionPane.showMessageDialog(null, "PirexData has been copied to " 
+										+ fc.getSelectedFile().getAbsoluteFile(), "Success!", JOptionPane.INFORMATION_MESSAGE);
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
 					}
-
 				}
 			}
 		});
@@ -784,28 +798,6 @@ public class Display implements DocumentListener {
 		}
 		
 		
-	}
-	
-	public static boolean containsIgnoreCase(String src, String what) 
-	{
-	    final int length = what.length();
-	    if (length == 0)
-	        return true; // Empty string is contained
-
-	    final char firstLo = Character.toLowerCase(what.charAt(0));
-	    final char firstUp = Character.toUpperCase(what.charAt(0));
-
-	    for (int i = src.length() - length; i >= 0; i--) {
-	        // Quick check before calling the more expensive regionMatches() method:
-	        final char ch = src.charAt(i);
-	        if (ch != firstLo && ch != firstUp)
-	            continue;
-
-	        if (src.regionMatches(true, i, what, 0, length))
-	            return true;
-	    }
-
-	    return false;
 	}
 
 	@Override

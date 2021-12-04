@@ -65,7 +65,7 @@ public final class Login extends JFrame implements ActionListener {
                         Display.main(null);
                         
                     } 
-                    
+                   
                     else if (userText.equalsIgnoreCase(general.getUsername()) && pwdText.equalsIgnoreCase(general.getPassword())) {
                     	   
                         JOptionPane.showMessageDialog(container, "You have general user privileges!");

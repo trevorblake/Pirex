@@ -12,7 +12,7 @@ public class User {
 		this.password = password;
 		this.privilege = privilege;
 	}
-
+	
 	public String getPassword() {
 		return password;
 	}

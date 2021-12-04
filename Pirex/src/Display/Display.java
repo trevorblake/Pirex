@@ -49,9 +49,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.event.ListSelectionEvent;
 
 
-public class Display {
+public class Display implements DocumentListener {
 
 	private JFrame frmPirex;
 	JTabbedPane tabbedPane;
@@ -68,6 +72,9 @@ public class Display {
 	private ArrayList<Doc> docs = new ArrayList<>();
 	private DefaultListModel<String> model = new DefaultListModel<String>();
 	private JList<String> list = new JList<String>(model);
+	ArrayList<Doc> keyDocsList = new ArrayList<Doc>();
+	String[] keyDocsArrText;
+	Doc[] keyDocsArr;
 	
 
 	/**
@@ -144,7 +151,6 @@ public class Display {
 
 		
 //Code for "Search Documents" page
-
 		JPanel search = new JPanel();
 		search.setForeground(Color.WHITE);
 		search.setBorder(null);
@@ -153,10 +159,8 @@ public class Display {
 		tabbedPane.setEnabledAt(1, true);
 		tabbedPane.setBackgroundAt(1, Color.WHITE);
 		
-		JButton btnNewButton_1 = new JButton("CLEAR\r\n");
-		btnNewButton_1.setBounds(718, 93, 94, 23);
-		
 		textField_3 = new JTextField();
+		textField_3.getDocument().addDocumentListener(this);
 		textField_3.setBounds(108, 89, 604, 30);
 		textField_3.setColumns(10);
 		
@@ -170,31 +174,11 @@ public class Display {
 		scrollPane_2.setBounds(33, 388, 813, 311);
 		scrollPane_2.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		
-		JButton btnNewButton_2 = new JButton("EDIT\r\n");
-		btnNewButton_2.setBounds(718, 212, 94, 23);
-	
-		btnNewButton_2.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				try {
-					editFile();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
-		});
-		
-		JButton btnNewButton_3 = new JButton("DELETE");
-		btnNewButton_3.setBounds(718, 270, 94, 23);
-		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		
-		btnNewButton_3.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				deleteFile();
-			}
-		});
+		JTextArea textArea = new JTextArea();
+		textArea.setWrapStyleWord(true);
+		textArea.setLineWrap(true);
+		textArea.setEditable(false);
+		scrollPane_2.setViewportView(textArea);
 		
 		JLabel lblNewLabel = new JLabel("Query:");
 		lblNewLabel.setBounds(44, 93, 45, 19);
@@ -208,9 +192,59 @@ public class Display {
 		search.add(lblNewLabel_1);
 		search.add(scrollPane_1);
 		
-		String[] arr = {docs.get(0).shortForm("the"), docs.get(1).shortForm("the")};
-		model.addElement(arr[0]);
-		model.addElement(arr[1]);
+		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		
+		JButton btnNewButton_1 = new JButton("CLEAR\r\n");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				textField_3.setText("");
+				search();
+				textField_3.requestFocus();
+			}
+		});
+		btnNewButton_1.setBounds(718, 93, 94, 23);
+		
+		JButton btnNewButton_2 = new JButton("EDIT\r\n");
+		btnNewButton_2.setBounds(718, 212, 94, 23);
+		btnNewButton_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				try {
+					editFile();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		
+		JButton btnNewButton_3 = new JButton("DELETE");
+		btnNewButton_3.setBounds(718, 270, 94, 23);	
+		btnNewButton_3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				deleteFile();
+			}
+		});
+		
+		list.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent e) {
+				if (list.getSelectedIndex() == -1)
+				{
+					btnNewButton_2.setEnabled(false);
+					btnNewButton_3.setEnabled(false);
+				}
+				
+				else
+				{
+					btnNewButton_2.setEnabled(true);
+					btnNewButton_3.setEnabled(true);
+					textArea.setText(keyDocsArr[list.getSelectedIndex()].toString());
+					textArea.setCaretPosition(0);
+				}
+			}
+		});
+		
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		scrollPane_1.setViewportView(list);
@@ -219,11 +253,6 @@ public class Display {
 		search.add(btnNewButton_1);
 		search.add(btnNewButton_2);
 		search.add(scrollPane_2);
-		
-		JTextArea textArea = new JTextArea();
-		textArea.setEditable(false);
-		scrollPane_2.setViewportView(textArea);
-		
 		JPanel panel = new JPanel();
 		panel.setBorder(new LineBorder(new Color(0, 0, 0)));
 		panel.setBackground(Color.WHITE);
@@ -690,11 +719,83 @@ public class Display {
             {
             	save();
             }
-
         }
 			else {
 				return;
 			}
+	}
+	
+	public void search()
+	{
+		String keywords = textField_3.getText().toLowerCase();
+		keyDocsArr = null;
+		keyDocsArrText = null;
+		keyDocsList.clear();
+		model.clear();
+		for (int i = 0; i < docs.size(); i++)
+		{
+			if (docs.get(i).getText().toLowerCase().contains(keywords))
+			{
+				keyDocsList.add(docs.get(i));
+			}
+		}
+		
+		keyDocsArr = new Doc[keyDocsList.size()];
+		keyDocsArrText = new String[keyDocsList.size()];
+		
+		for (int i = 0; i < keyDocsList.size(); i++)
+		{
+			keyDocsArr[i] = keyDocsList.get(i);
+			keyDocsArrText[i] = keyDocsList.get(i).shortForm(keywords);
+			model.addElement(keyDocsArrText[i]);
+		}
+		
+		if(keywords.equals(null) || keywords.equals("") || keywords.equals(" "))
+		{
+			model.clear();
+		}
+		
+		
+	}
+	
+	public static boolean containsIgnoreCase(String src, String what) 
+	{
+	    final int length = what.length();
+	    if (length == 0)
+	        return true; // Empty string is contained
+
+	    final char firstLo = Character.toLowerCase(what.charAt(0));
+	    final char firstUp = Character.toUpperCase(what.charAt(0));
+
+	    for (int i = src.length() - length; i >= 0; i--) {
+	        // Quick check before calling the more expensive regionMatches() method:
+	        final char ch = src.charAt(i);
+	        if (ch != firstLo && ch != firstUp)
+	            continue;
+
+	        if (src.regionMatches(true, i, what, 0, length))
+	            return true;
+	    }
+
+	    return false;
+	}
+
+	@Override
+	public void insertUpdate(DocumentEvent e) {
+		// TODO Auto-generated method stub
+		search();
+	}
+
+	@Override
+	public void removeUpdate(DocumentEvent e) {
+		// TODO Auto-generated method stub
+		search();
+	}
+
+	@Override
+	public void changedUpdate(DocumentEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

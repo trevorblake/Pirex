@@ -5,10 +5,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Enumeration;
-import java.util.List;
 import java.util.Scanner;
-import java.util.Vector;
 
 
 
@@ -63,9 +60,7 @@ public class Doc
     	
         try {
             scan = new Scanner(new File(this.location));
-            //System.out.println("it is working");
         } catch (FileNotFoundException e) {
-            //System.out.println("it is not working");
         }
     	
     	while(scan.hasNext())
@@ -80,47 +75,89 @@ public class Doc
     public String shortForm(String keyword) // formatting for short form displays
     {
     	String s = "";
-    	String sub = "";
-
+    	ArrayList<String> sub = new ArrayList<String>(); 
+    	String textFix = text.replaceAll("\\R+", " ").replaceAll("  ", " ");
     	String[] keys = keyword.split(" ");
-    	String textOnlySpaces = text.replaceAll("\\R+", " ").replaceAll("  ", " ");
-    	String[] textArr = textOnlySpaces.split(" ");
+    	String[] textArr = textFix.split(" ");
     	ArrayList<String> textList = new ArrayList<String>();
     	Collections.addAll(textList, textArr);
-
-    	
-    	if (text.contains(keyword))
-    	{
-    		int keyIndex = textList.indexOf(keys[0]);
-
-    	    for(int i = keyIndex - 5; i < keyIndex + 6; i++)
-    	    {
-    	    	
-    	        if (i < 0 || i > textList.size())
-    	        {
-    	           sub+= "";
-    	        }
-    	            
-    	        else
-    	        {
-    	            if(i == keyIndex +5)
-    	            {
-    	                sub+= textList.get(i);
-    	            }
-    	                
-    	            else
-    	            {
-    	            	sub+= textList.get(i) + " ";
-    	            }
-    	        }
-    	    } 
-    	    
-	        s+= title + ", ";
-	        s+= author + ", ";
-	        s+= date + " - \"";
-	        s+= sub + "\"";
+    	String index = "";
+    	int j = 0;
+		int m = 1;
+		int n = 1;
+    	  	
+    	for (int i = 0; i < textList.size(); i++)
+    	{	
+    		if(j < keys.length)
+    		{
+    			if(textList.get(i).toLowerCase().contains(keys[j].toLowerCase()))
+    			{
+    				index += Integer.toString(i) + " ";
+    				j++;
+    			}
+    			
+    			else
+    			{
+    				j = 0;
+    				index = "";
+    			}
+    		}    		
     	}
     	
+    	if(!index.equals(""))
+    	{
+    		String[] indexInText = index.split(" ");
+    		for (int i = 0; i < indexInText.length; i++)
+    		{
+    			sub.add(textList.get(Integer.parseInt(indexInText[i])));		
+    		}
+    		
+    		for(int i = keys.length; i < 9;)
+    		{	
+    			if (Integer.parseInt(indexInText[0]) - m >= 0)
+    			{
+    				sub.add(0, textList.get(Integer.parseInt(indexInText[0]) - m));
+    				m++;
+    				i++;
+    			}
+    			
+    			else
+    			{
+    				i++;
+    			}
+    		
+				if (Integer.parseInt(indexInText[indexInText.length-1]) + n < textList.size())
+				{
+					sub.add(textList.get(Integer.parseInt(indexInText[indexInText.length-1]) + n));
+					n++;
+					i++;
+				}
+				
+				else
+				{
+					i++;
+				}
+				
+    		}     	
+    	}
+    	
+        s+= title + ", ";
+        s+= author + ", ";
+        s+= date + " - \"";
+        for(int i = 0; i < sub.size(); i++)
+        {
+        	if(i == sub.size() - 1)
+        	{
+        		s+=sub.get(i);
+        	}
+        	
+        	else
+        	{
+        		s+= sub.get(i) + " ";
+        	}
+        	
+        }
+        s+= "\"";
     	return s;
     }
     

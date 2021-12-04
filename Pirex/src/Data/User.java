@@ -1,16 +1,36 @@
 package Data;
 
 public class User {
-	static String username = "a";
-	static String password = "b";
-	User u = new User();
-	public static String getUser()
+	
+	private String username;
+	private String password;
+	private int privilege;
+	
+	public User(String username, String password, int privilege)
 	{
+		this.username = username;
+		this.password = password;
+		this.privilege = privilege;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	public String getUsername() {
 		return username;
 	}
-	
-	public static String getPass()
-	{
-		return password;
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public int getPrivilege() {
+		return privilege;
+	}
+
+	public void setPrivilege(int privilege) {
+		this.privilege = privilege;
 	}
 }

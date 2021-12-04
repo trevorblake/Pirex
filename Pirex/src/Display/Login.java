@@ -5,7 +5,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.concurrent.TimeUnit;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public final class Login extends JFrame implements ActionListener {
 
@@ -23,6 +24,9 @@ public final class Login extends JFrame implements ActionListener {
     JButton resetButton = new JButton("RESET");
     JCheckBox showPassword = new JCheckBox("Show Password");
     private final JLabel lblNewLabel = new JLabel("  Please Log In Below");
+    User admin = new User("admin", "password", 1);
+    User general = new User("user", "password", 0);
+    public static int privilege = 1;
 
 
     Login() {
@@ -41,6 +45,43 @@ public final class Login extends JFrame implements ActionListener {
         userLabel.setBounds(50, 158, 73, 30);
         passwordLabel.setBounds(50, 228, 100, 30);
         userTextField.setBounds(150, 158, 150, 30);
+        passwordField.addKeyListener(new KeyAdapter() {
+        	@SuppressWarnings("deprecation")
+			@Override
+        	public void keyPressed(KeyEvent e) {
+        		
+        		if (e.getKeyCode() == KeyEvent.VK_ENTER)
+        		{
+        		
+        			String userText;
+                    String pwdText;
+                    userText = userTextField.getText();
+                    pwdText = passwordField.getText();
+                    if (userText.equalsIgnoreCase(admin.getUsername()) && pwdText.equalsIgnoreCase(admin.getPassword())) {
+           
+                        JOptionPane.showMessageDialog(container, "You have administrator privileges!");
+                        privilege = 1;
+                        frame.dispose();
+                        Display.main(null);
+                        
+                    } 
+                    
+                    else if (userText.equalsIgnoreCase(general.getUsername()) && pwdText.equalsIgnoreCase(general.getPassword())) {
+                    	   
+                        JOptionPane.showMessageDialog(container, "You have general user privileges!");
+                        privilege = 0;
+                        frame.dispose();
+                        Display.main(null);
+                        
+                    } 
+                    
+                    else {
+                        JOptionPane.showMessageDialog(container, "Invalid Username or Password");
+                    }
+        		}
+        		
+        	}
+        });
         passwordField.setBounds(150, 228, 150, 30);
         showPassword.setBounds(150, 258, 150, 30);
         loginButton.setBounds(50, 308, 100, 30);
@@ -73,30 +114,36 @@ public final class Login extends JFrame implements ActionListener {
     }
 
 
-    @Override
+    @SuppressWarnings("deprecation")
+	@Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == loginButton) {
             String userText;
             String pwdText;
             userText = userTextField.getText();
             pwdText = passwordField.getText();
-            if (userText.equalsIgnoreCase(User.getUser()) && pwdText.equalsIgnoreCase(User.getPass())) {
-                try
-                {
-                    Thread.sleep(3000);
-                }
-                catch(InterruptedException ex)
-                {
-                    Thread.currentThread().interrupt();
-                }
-               
+            if (userText.equalsIgnoreCase(admin.getUsername()) && pwdText.equalsIgnoreCase(admin.getPassword())) {
+   
+                JOptionPane.showMessageDialog(this, "You have administrator privileges!");
+                privilege = 1;
                 frame.dispose();
                 Display.main(null);
                 
-            } else {
+            } 
+            
+            else if (userText.equalsIgnoreCase(general.getUsername()) && pwdText.equalsIgnoreCase(general.getPassword())) {
+            	   
+                JOptionPane.showMessageDialog(this, "You have general user privileges!");
+                privilege = 0;
+                frame.dispose();
+                Display.main(null);
+                
+            } 
+            
+            else {
                 JOptionPane.showMessageDialog(this, "Invalid Username or Password");
             }
-
+            
         }
         if (e.getSource() == resetButton) {
             userTextField.setText("");

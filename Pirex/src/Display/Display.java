@@ -58,12 +58,12 @@ import javax.swing.event.ListSelectionEvent;
 public class Display implements DocumentListener {
 
 	private JFrame frmPirex;
-	JTabbedPane tabbedPane;
+	private JTabbedPane tabbedPane;
 	private JTextField textFieldTextFile;
 	private JTextField textFieldTitle;
 	private JTextField textFieldAuthor;
-	JTextArea textFieldScroll = new JTextArea();
-	JTextArea summary = new JTextArea();
+	private JTextArea textFieldScroll = new JTextArea();
+	private JTextArea summary = new JTextArea();
 	private int index = 0;
 	private Timer timer;
 	private JTextField textField_3;
@@ -72,9 +72,11 @@ public class Display implements DocumentListener {
 	private ArrayList<Doc> docs = new ArrayList<>();
 	private DefaultListModel<String> model = new DefaultListModel<String>();
 	private JList<String> list = new JList<String>(model);
-	ArrayList<Doc> keyDocsList = new ArrayList<Doc>();
-	String[] keyDocsArrText;
-	Doc[] keyDocsArr;
+	private ArrayList<Doc> keyDocsList = new ArrayList<Doc>();
+	private String[] keyDocsArrText;
+	private Doc[] keyDocsArr;
+	private static int privilege = 1;
+	
 	
 
 	/**
@@ -89,6 +91,8 @@ public class Display implements DocumentListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					privilege = Login.privilege;
+					System.out.println(privilege);
 					Display window = new Display();
 					window.frmPirex.setVisible(true);
 				} catch (Exception e) {
@@ -209,11 +213,19 @@ public class Display implements DocumentListener {
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				try {
-					editFile();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+				if(privilege == 0)
+				{
+					JOptionPane.showMessageDialog(frmPirex, "Only administrators can edit documents!");
+				}
+				
+				else
+				{
+					try {
+						editFile();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}
 			}
 		});
@@ -223,7 +235,15 @@ public class Display implements DocumentListener {
 		btnNewButton_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				deleteFile();
+				if(privilege == 0)
+				{
+					JOptionPane.showMessageDialog(frmPirex, "Only administrators can delete documents!");
+				}
+				
+				else
+				{
+					deleteFile();
+				}
 			}
 		});
 		
@@ -298,13 +318,21 @@ public class Display implements DocumentListener {
 		JButton btnBrowse = new JButton("BROWSE");
 		btnBrowse.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
-				fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-				int a = fc.showSaveDialog(null);
 				
-				if (a == JFileChooser.APPROVE_OPTION)
+				if(privilege == 0)
 				{
-					textFieldTextFile.setText(fc.getSelectedFile().getAbsolutePath());
+					JOptionPane.showMessageDialog(frmPirex, "Only administrators can upload documents!");
+				}
+				
+				else
+				{
+					fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+					int a = fc.showSaveDialog(null);
+				
+					if (a == JFileChooser.APPROVE_OPTION)
+					{
+						textFieldTextFile.setText(fc.getSelectedFile().getAbsolutePath());
+					}
 				}
 			}
 		});

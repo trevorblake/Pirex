@@ -1,6 +1,10 @@
 package Testing;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.ArrayList;
 
 import javax.annotation.processing.Generated;
@@ -8,7 +12,9 @@ import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.event.DocumentEvent;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.tools.configuration.base.MethodRef;
 
 import Data.Doc;
@@ -16,6 +22,9 @@ import Display.Display;
 
 @Generated(value = "org.junit-tools-1.1.0")
 public class DisplayTest {
+	
+	@Rule
+	public final ExpectedException exception = ExpectedException.none();
 
 	private Display createTestSubject() {
 		return new Display();
@@ -50,12 +59,17 @@ public class DisplayTest {
 		testSubject = createTestSubject();
 		testSubject.titleTextField.setText("Test");
 		testSubject.authorTextField.setText("Test");
-		testSubject.fileTextField.setText("C:\\Users\\Boreal\\OneDrive\\Documents\\PirexDataCopy\\Monty Python.txt");
+		testSubject.fileTextField.setText("src/Testing/Test.txt");
 		testSubject.processing();
-		testSubject.docs.get(testSubject.docs.size() - 1);
-		DefaultListModel<String> model = new DefaultListModel<String>();
-		model.addElement(testSubject.docs.get(testSubject.docs.size() - 1).shortForm("Monty"));
+		testSubject.load();
+		testSubject.query.setText("Test");
+		testSubject.search();
+		testSubject.queryList.setSelectedIndex(testSubject.model.getSize()-1);
+
+		
 		testSubject.deleteFile();
+
+
 	}
 
 	@MethodRef(name = "copy", signature = "(QFile;QFile;)V")
@@ -73,6 +87,15 @@ public class DisplayTest {
 		dest = null;
 		source = null;
 		Display.copy(source, dest);
+	}
+	
+	@Test
+	public void testCopyException() throws Exception {
+		File source = new File("src/Testing/a.txt");
+		File dest = new File("src/Testing/Test.txt");
+		exception.expect(IOException.class);
+		Display.copy(source, dest);
+		
 	}
 
 	@MethodRef(name = "copyDirectory", signature = "(QFile;QFile;)V")
@@ -120,7 +143,7 @@ public class DisplayTest {
 	public void testSummaryText() throws Exception {
 		Display testSubject;
 		ArrayList<Doc> docs = new ArrayList<Doc>();
-		docs.add(new Doc("Monty Python", "", ""));
+		docs.add(new Doc("Star Wars", "", ""));
 		String result;
 
 		// default test

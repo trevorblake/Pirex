@@ -83,6 +83,8 @@ public class Display implements DocumentListener {
     final static Color  HILIT_COLOR = Color.LIGHT_GRAY;
     final static Color  ERROR_COLOR = Color.PINK;
     final static String CANCEL_ACTION = "cancel-search";
+	public int choice;
+	public int selectedIndex = queryList.getSelectedIndex();
      
     final Highlighter hilit;
     final Highlighter.HighlightPainter painter;
@@ -243,7 +245,7 @@ public class Display implements DocumentListener {
 		deleteButton.setBounds(718, 270, 94, 23);	
 		deleteButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+						
 				if(privilege == 0)
 				{
 					JOptionPane.showMessageDialog(pirex, "Only administrators can delete documents!");
@@ -274,7 +276,7 @@ public class Display implements DocumentListener {
 					String content = docTextArea.getText().toLowerCase();
 					int index = content.indexOf(s, 0);
 					
-					if (index >= 0) {   // match found
+					if (index >= 0) {
 			            try {
 			                int end = index + s.length();
 			                hilit.addHighlight(index, end, painter);
@@ -363,12 +365,14 @@ public class Display implements DocumentListener {
 				
 				else
 				{
-					try {
-						processing();
-					} catch (FileNotFoundException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
+					
+						try {
+							processing();
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+
 				}
 			}
 		});
@@ -383,7 +387,7 @@ public class Display implements DocumentListener {
 				 
 		        	try {
 						processing();
-					} catch (FileNotFoundException e1) {
+					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
@@ -564,19 +568,17 @@ public class Display implements DocumentListener {
 		help.setLayout(gl_help);
 	}
 
-	public void processing() throws FileNotFoundException
+	public void processing() throws IOException
 	{
 		String file = fileTextField.getText();
 		String title = titleTextField.getText();
 		String author = authorTextField.getText();
 		String date = new SimpleDateFormat("HH:mm MM-dd-yyy").format(new Date());
-		try {
-	    	   File a = new File("PirexData/" + title + ".txt");
-	    	   a.createNewFile();
-	    	   copy(new File(file), a);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+
+	    File a = new File("PirexData/" + title + ".txt");
+	    a.createNewFile();
+	    copy(new File(file), a);
+
 		docs.add(new Doc(title, author, date));
 		loadText.setText("");
 		loadInfo.add("File: ");
@@ -598,7 +600,7 @@ public class Display implements DocumentListener {
 	    InputStream is = null;
 	    OutputStream os = null;
 	    
-	    if(source != null && dest != null)
+	    if(source != null)
 	    {
 	    	try {
 	    		is = new FileInputStream(source);
@@ -755,12 +757,24 @@ public class Display implements DocumentListener {
 
 	public void deleteFile() {
 		int selectedIndex = queryList.getSelectedIndex();
-		if (selectedIndex != -1) {
-			int choice = JOptionPane.showConfirmDialog(pirex,"Are you sure you want to delete?", "Select an Option" , JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
+		int indexNeeded = 0;
+		for(int i = 0; i < docs.size(); i++)
+		{
+			if(docs.get(i).shortForm(query.getText()).equals(queryList.getSelectedValue()))
+			{
+				indexNeeded = i;
+			}
+		}
+		
+		if (selectedIndex != -1) {			
+			choice = JOptionPane.showConfirmDialog(pirex,"Are you sure you want to delete " + docs.get(indexNeeded).getTitle() + "?", "Select an Option" , JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
+
+			
 			if (choice == 0) {
-				File file = new File(docs.get(selectedIndex).getLocation());
+				File file = new File(docs.get(indexNeeded).getLocation());
+				docs.remove(docs.get(indexNeeded));
 				model.remove(selectedIndex);
-				docs.remove(docs.get(selectedIndex));
+				
 				file.delete();
 				save();
 				JOptionPane.showMessageDialog(pirex, "Document successfully deleted");
@@ -770,8 +784,17 @@ public class Display implements DocumentListener {
 	
 	public void editFile() throws IOException {
 		int selectedIndex = queryList.getSelectedIndex();
+		int indexNeeded = 0;
+		for(int i = 0; i < docs.size(); i++)
+		{
+			if(docs.get(i).shortForm(query.getText()).equals(queryList.getSelectedValue()))
+			{
+				indexNeeded = i;
+			}
+		}
+		
 		if (selectedIndex != -1) {
-            File file = new File(docs.get(selectedIndex).getLocation());
+            File file = new File(docs.get(indexNeeded).getLocation());
             java.awt.Desktop.getDesktop().edit(file);
             Object[] options = {"OK"};
             int n = JOptionPane.showOptionDialog(pirex,"Click OK when after saving the document.", "Finished Editing?", JOptionPane.PLAIN_MESSAGE, JOptionPane.QUESTION_MESSAGE, null, options, null);
@@ -812,6 +835,7 @@ public class Display implements DocumentListener {
 		{
 			model.clear();
 		}
+		
 		
 	}
 

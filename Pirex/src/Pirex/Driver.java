@@ -4,6 +4,8 @@ import Display.Login;
 public class Driver {
 	public static void main(String[] args)
 	{
-		Login.main(args);
+		new Driver();
+		Login a = new Login();
+		a.createLogin();
 	}
 }

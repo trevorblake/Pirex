@@ -3,7 +3,6 @@ package Data;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Scanner;
 
@@ -19,7 +18,7 @@ public class Doc
 	Scanner scan;
     
     
-    public Doc(String title, String author, String date)
+    public Doc(String title, String author, String date) throws FileNotFoundException
     {
     	this.title = title;
     	this.author = author;
@@ -54,14 +53,13 @@ public class Doc
     	return this.text;
     }
     
-    public String formText()
+    public String formText() throws FileNotFoundException
     {	
     	this.text = "";
     	
-        try {
-            scan = new Scanner(new File(this.location));
-        } catch (FileNotFoundException e) {
-        }
+
+        scan = new Scanner(new File(this.location));
+
     	
     	while(scan.hasNext())
     	{

@@ -22,6 +22,7 @@ import javax.swing.DefaultListModel;
 import java.awt.Toolkit;
 import Data.Doc;
 import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -53,7 +54,6 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Highlighter;
-import javax.swing.text.JTextComponent;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
@@ -61,25 +61,25 @@ import javax.swing.event.ListSelectionEvent;
 
 public class Display implements DocumentListener {
 
-	private JFrame pirex;
-	private JTabbedPane tabs;
-	private JTextField fileTextField;
-	private JTextField titleTextField;
-	private JTextField authorTextField;
-	private JTextArea loadText = new JTextArea();
-	private JTextArea summary = new JTextArea();
-	private int index = 0;
-	private Timer timer;
-	private JTextField query;
-	private JFileChooser fc = new JFileChooser();
-	private ArrayList<String> loadInfo = new ArrayList<>();
-	private ArrayList<Doc> docs = new ArrayList<>();
-	private DefaultListModel<String> model = new DefaultListModel<String>();
-	private JList<String> queryList = new JList<String>(model);
-	private ArrayList<Doc> keyDocsList = new ArrayList<Doc>();
-	private String[] keyDocsArrText;
-	private Doc[] keyDocsArr;
-	private static int privilege = 1;
+	public JFrame pirex;
+	public JTabbedPane tabs;
+	public JTextField fileTextField;
+	public JTextField titleTextField;
+	public JTextField authorTextField;
+	public JTextArea loadText = new JTextArea();
+	public JTextArea summary = new JTextArea();
+	public int index = 0;
+	public Timer timer;
+	public JTextField query;
+	public JFileChooser fc = new JFileChooser();
+	public ArrayList<String> loadInfo = new ArrayList<>();
+	public ArrayList<Doc> docs = new ArrayList<>();
+	public DefaultListModel<String> model = new DefaultListModel<String>();
+	public JList<String> queryList = new JList<String>(model);
+	public ArrayList<Doc> keyDocsList = new ArrayList<Doc>();
+	public String[] keyDocsArrText;
+	public Doc[] keyDocsArr;
+	public static int privilege = 1;
     final static Color  HILIT_COLOR = Color.LIGHT_GRAY;
     final static Color  ERROR_COLOR = Color.PINK;
     final static String CANCEL_ACTION = "cancel-search";
@@ -90,22 +90,23 @@ public class Display implements DocumentListener {
 	
 	/**
 	 * Launch the application.
+	 * @throws UnsupportedLookAndFeelException 
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
+	 * @throws ClassNotFoundException 
 	 */
-	public static void main(String[] args) {
-		try {  
-			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
+	public void createGUI() throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
+ 
+		UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				try {
+
 					privilege = Login.privilege;
 					Display window = new Display();
 					window.pirex.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+
+				
 			}
 		});
 	}
@@ -124,7 +125,7 @@ public class Display implements DocumentListener {
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize() {
+	public void initialize() {
 
 		load();
 		
@@ -362,7 +363,12 @@ public class Display implements DocumentListener {
 				
 				else
 				{
-					processing();
+					try {
+						processing();
+					} catch (FileNotFoundException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}
 			}
 		});
@@ -375,7 +381,12 @@ public class Display implements DocumentListener {
 		        if (e.getKeyCode() == KeyEvent.VK_ENTER)
 		        {
 				 
-		        	processing();
+		        	try {
+						processing();
+					} catch (FileNotFoundException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 		        }
 			}
 		});
@@ -553,7 +564,7 @@ public class Display implements DocumentListener {
 		help.setLayout(gl_help);
 	}
 
-	public void processing()
+	public void processing() throws FileNotFoundException
 	{
 		String file = fileTextField.getText();
 		String title = titleTextField.getText();
@@ -583,27 +594,32 @@ public class Display implements DocumentListener {
 		save();
 	}
 	
-	private static void copy(File source, File dest) throws IOException {
+	public static void copy(File source, File dest) throws IOException {
 	    InputStream is = null;
 	    OutputStream os = null;
+	    
+	    if(source != null && dest != null)
+	    {
+	    	try {
+	    		is = new FileInputStream(source);
+	    		os = new FileOutputStream(dest);
 
-	    try {
-	        is = new FileInputStream(source);
-	        os = new FileOutputStream(dest);
-
-	        int length;
-	        while ((length = is.read()) > 0) {
-	            os.write(length);
-	        }
-	    } finally {
-	        is.close();
-	        os.close();
+	    		int length;
+	    		while ((length = is.read()) > 0) {
+	    			os.write(length);
+	    		}
+	    	} finally {
+	    		is.close();
+	    		os.close();
+	    	}
 	    }
 	}
 	
 	public void copyDirectory(File sourceLocation , File targetLocation)
 		    throws IOException {
 
+		if (sourceLocation != null && targetLocation != null)
+		{
 		        if (sourceLocation.isDirectory()) {
 		            if (!targetLocation.exists()) {
 		                targetLocation.mkdir();
@@ -626,7 +642,8 @@ public class Display implements DocumentListener {
 		            in.close();
 		            out.close();
 		        }
-		    }
+		}
+	}
 	
 	public void load()
 	{

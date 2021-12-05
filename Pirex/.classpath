@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry excluding="src/|images/|PirexData/" kind="src" path=""/>
 	<classpathentry kind="src" path="images"/>
@@ -11,6 +12,7 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="miglayout15-swing.jar" sourcepath="miglayout-src.zip"/>
 	<classpathentry kind="lib" path="jgoodies-forms-1.8.0.jar" sourcepath="jgoodies-forms-1.8.0-sources.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5"/>
+	<classpathentry kind="lib" path="jmockit.jar"/>
+	<classpathentry kind="lib" path="junit-tools.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

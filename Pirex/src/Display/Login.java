@@ -29,7 +29,7 @@ public final class Login extends JFrame implements ActionListener {
     public static int privilege = 1;
 
 
-    Login() {
+    public Login() {
         setLayoutManager();
         setLocationAndSize();
         addComponentsToContainer();
@@ -62,7 +62,7 @@ public final class Login extends JFrame implements ActionListener {
                         JOptionPane.showMessageDialog(container, "You have administrator privileges!");
                         privilege = 1;
                         frame.dispose();
-                        Display.main(null);
+                        createPirex();
                         
                     } 
                    
@@ -71,7 +71,7 @@ public final class Login extends JFrame implements ActionListener {
                         JOptionPane.showMessageDialog(container, "You have general user privileges!");
                         privilege = 0;
                         frame.dispose();
-                        Display.main(null);
+						createPirex();
                         
                     } 
                     
@@ -127,7 +127,7 @@ public final class Login extends JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(this, "You have administrator privileges!");
                 privilege = 1;
                 frame.dispose();
-                Display.main(null);
+                createPirex();
                 
             } 
             
@@ -136,7 +136,7 @@ public final class Login extends JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(this, "You have general user privileges!");
                 privilege = 0;
                 frame.dispose();
-                Display.main(null);
+                createPirex();
                 
             } 
             
@@ -159,9 +159,20 @@ public final class Login extends JFrame implements ActionListener {
 
         }
     }
+    
+    public static void createPirex() {
+    	Display a = new Display();
+    	try {
+			a.createGUI();
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+				| UnsupportedLookAndFeelException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
 
 
-    public static void main(String[] a) {
+    public void createLogin() {
 
         frame.setIconImage(Toolkit.getDefaultToolkit().getImage("images/p.png"));
         frame.setTitle("Pirex");

@@ -50,6 +50,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultHighlighter;
+import javax.swing.text.Highlighter;
+import javax.swing.text.JTextComponent;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
@@ -76,6 +80,13 @@ public class Display implements DocumentListener {
 	private String[] keyDocsArrText;
 	private Doc[] keyDocsArr;
 	private static int privilege = 1;
+    final static Color  HILIT_COLOR = Color.LIGHT_GRAY;
+    final static Color  ERROR_COLOR = Color.PINK;
+    final static String CANCEL_ACTION = "cancel-search";
+     
+    final Highlighter hilit;
+    final Highlighter.HighlightPainter painter;
+	JTextArea docTextArea = new JTextArea();
 	
 	/**
 	 * Launch the application.
@@ -104,6 +115,10 @@ public class Display implements DocumentListener {
 	 */
 	public Display() {
 		initialize();
+        hilit = new DefaultHighlighter();
+        painter = new DefaultHighlighter.DefaultHighlightPainter(HILIT_COLOR);
+        docTextArea.setHighlighter(hilit);
+
 	}
 
 	/**
@@ -173,7 +188,6 @@ public class Display implements DocumentListener {
 		docScroll.setBounds(33, 388, 813, 311);
 		docScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		
-		JTextArea docTextArea = new JTextArea();
 		docTextArea.setWrapStyleWord(true);
 		docTextArea.setLineWrap(true);
 		docTextArea.setEditable(false);
@@ -255,6 +269,19 @@ public class Display implements DocumentListener {
 					deleteButton.setEnabled(true);
 					docTextArea.setText(keyDocsArr[queryList.getSelectedIndex()].toString());
 					docTextArea.setCaretPosition(0);
+					String s = query.getText().toLowerCase();
+					String content = docTextArea.getText().toLowerCase();
+					int index = content.indexOf(s, 0);
+					
+					if (index >= 0) {   // match found
+			            try {
+			                int end = index + s.length();
+			                hilit.addHighlight(index, end, painter);
+			                docTextArea.setCaretPosition(end);
+			            } catch (BadLocationException e1) {
+			                e1.printStackTrace();
+			            }
+					}
 				}
 			}
 		});
@@ -767,7 +794,8 @@ public class Display implements DocumentListener {
 		if(keywords.equals(null) || keywords.equals("") || keywords.equals(" "))
 		{
 			model.clear();
-		}	
+		}
+		
 	}
 
 	@Override

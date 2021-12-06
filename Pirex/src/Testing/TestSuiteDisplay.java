@@ -7,5 +7,5 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses(
 
 { LoginTest.class, DisplayTest.class })
-public class TestSuiteDisplay { // nothing
+public class TestSuiteDisplay {
 }

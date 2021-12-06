@@ -7,5 +7,5 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses(
 
 { DriverTest.class })
-public class TestSuitePirex { // nothing
+public class TestSuitePirex {
 }

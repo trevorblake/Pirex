@@ -48,8 +48,6 @@ import java.util.Scanner;
 import java.util.StringTokenizer;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
@@ -378,22 +376,6 @@ public class Display implements DocumentListener {
 		});
 		
 		authorTextField = new JTextField();
-		authorTextField.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				
-		        if (e.getKeyCode() == KeyEvent.VK_ENTER)
-		        {
-				 
-		        	try {
-						processing();
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-		        }
-			}
-		});
 		authorTextField.setColumns(10);
 		
 		GroupLayout gl_load = new GroupLayout(load);
@@ -623,9 +605,6 @@ public class Display implements DocumentListener {
 		if (sourceLocation != null && targetLocation != null)
 		{
 		        if (sourceLocation.isDirectory()) {
-		            if (!targetLocation.exists()) {
-		                targetLocation.mkdir();
-		            }
 
 		            String[] children = sourceLocation.list();
 		            for (int i=0; i<children.length; i++) {

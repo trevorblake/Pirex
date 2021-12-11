@@ -159,6 +159,7 @@ public class Display implements DocumentListener {
 		welcome.setLayout(null);
 		
 		JTextPane welcomeText = new JTextPane();
+		welcomeText.setEditable(false);
 		welcomeText.setFont(new Font("Trebuchet MS", Font.BOLD, 30));
 		welcomeText.setText("                      Welcome to Pirex\r\nPlease click on one of the tabs above to begin");
 		welcomeText.setBounds(113, 178, 650, 97);

@@ -602,28 +602,32 @@ public class Display implements DocumentListener {
 	public void copyDirectory(File sourceLocation , File targetLocation)
 		    throws IOException {
 
-		if (sourceLocation != null && targetLocation != null)
-		{
-		        if (sourceLocation.isDirectory()) {
+	    if (sourceLocation.isDirectory()) {
+	        if (!targetLocation.exists()) {
+	            targetLocation.mkdir();
+	        }
 
-		            String[] children = sourceLocation.list();
-		            for (int i=0; i<children.length; i++) {
-		                copyDirectory(new File(sourceLocation, children[i]),
-		                        new File(targetLocation, children[i]));
-		            }
-		        } else {
+	        String[] children = sourceLocation.list();
+	        for (int i = 0; i < sourceLocation.listFiles().length; i++) {
 
-		            InputStream in = new FileInputStream(sourceLocation);
-		            OutputStream out = new FileOutputStream(targetLocation);
+	            copyDirectory(new File(sourceLocation, children[i]),
+	                    new File(targetLocation, children[i]));
+	        }
+	    } else {
 
-		            int length;
-		            while ((length = in.read()) > 0) {
-		                out.write(length);
-		            }
-		            in.close();
-		            out.close();
-		        }
-		}
+	        InputStream in = new FileInputStream(sourceLocation);
+
+	        OutputStream out = new FileOutputStream(targetLocation);
+
+	        // Copy the bits from instream to outstream
+	        byte[] buf = new byte[1024];
+	        int len;
+	        while ((len = in.read(buf)) > 0) {
+	            out.write(buf, 0, len);
+	        }
+	        in.close();
+	        out.close();
+	    }
 	}
 	
 	public void load()

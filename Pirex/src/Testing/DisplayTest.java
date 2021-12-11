@@ -74,26 +74,6 @@ public class DisplayTest {
 		Display.copy(source, dest);
 	}
 
-	@MethodRef(name = "copyDirectory", signature = "(QFile;QFile;)V")
-	@Test
-	public void testCopyDirectory() throws Exception {
-		Display testSubject;
-		File sourceLocation = null;
-		File targetLocation = null;
-
-		// test 1
-		testSubject = createTestSubject();
-		sourceLocation = null;
-		targetLocation = null;
-		testSubject.copyDirectory(sourceLocation, targetLocation);
-
-		// test 2
-		testSubject = createTestSubject();
-		targetLocation = null;
-		sourceLocation = null;
-		testSubject.copyDirectory(sourceLocation, targetLocation);
-	}
-
 	@MethodRef(name = "load", signature = "()V")
 	@Test
 	public void testLoad() throws Exception {

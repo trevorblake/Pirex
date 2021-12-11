@@ -22,3 +22,5 @@ public class TestSuiteRunner {
 		System.out.println(result.wasSuccessful());
 	}
 }
+
+

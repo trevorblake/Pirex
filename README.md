@@ -1,4 +1,4 @@
-# Final-Project
+# Pirex
 Group final project for CSC131 Software Engineering with Dr. Chidella.
 Pirex can be used to quickly search for keywords (queries) within an unlimited number of documents simultaneously.
 With this database query finder, you can add additional documents, edit or delete documents, search for keywords, and export the directory.

@@ -1,10 +1,10 @@
-package Data;
+package Pirex;
 
 public class User {
 	
-	private String username;
-	private String password;
-	private int privilege;
+	private final String username;
+	private final String password;
+	private final int privilege;
 	
 	public User(String username, String password, int privilege)
 	{

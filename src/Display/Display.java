@@ -20,7 +20,7 @@ import javax.swing.JFileChooser;
 import javax.swing.border.EmptyBorder;
 import javax.swing.DefaultListModel;
 import java.awt.Toolkit;
-import Data.Doc;
+import Pirex.Doc;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.JTextField;
@@ -38,16 +38,17 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.JarURLConnection;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Scanner;
-import java.util.StringTokenizer;
+import java.util.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
@@ -59,6 +60,12 @@ import javax.swing.event.ListSelectionEvent;
 
 public class Display implements DocumentListener {
 
+    final static Color  HILIT_COLOR = Color.LIGHT_GRAY;
+    final static Color  ERROR_COLOR = Color.PINK;
+    final static String CANCEL_ACTION = "cancel-search";
+	public static int privilege = 1;
+    final Highlighter hilit;
+    final Highlighter.HighlightPainter painter;
 	public JFrame pirex;
 	public JTabbedPane tabs;
 	public JTextField fileTextField;
@@ -70,33 +77,64 @@ public class Display implements DocumentListener {
 	public Timer timer;
 	public JTextField query;
 	public JFileChooser fc = new JFileChooser();
+	public JFileChooser mfc = new JFileChooser();
 	public ArrayList<String> loadInfo = new ArrayList<>();
 	public ArrayList<Doc> docs = new ArrayList<>();
 	public DefaultListModel<String> model = new DefaultListModel<String>();
 	public JList<String> queryList = new JList<String>(model);
+	public int selectedIndex = queryList.getSelectedIndex();
 	public ArrayList<Doc> keyDocsList = new ArrayList<Doc>();
 	public String[] keyDocsArrText;
 	public Doc[] keyDocsArr;
-	public static int privilege = 1;
-    final static Color  HILIT_COLOR = Color.LIGHT_GRAY;
-    final static Color  ERROR_COLOR = Color.PINK;
-    final static String CANCEL_ACTION = "cancel-search";
+	public boolean timerRunning;
 	public int choice;
-	public int selectedIndex = queryList.getSelectedIndex();
-     
-    final Highlighter hilit;
-    final Highlighter.HighlightPainter painter;
+	File jarDir = new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
+	File dir = new File(jarDir.getParentFile().getAbsolutePath());
+	File dataDir;
+	String dataDirString;
 	JTextArea docTextArea = new JTextArea();
 	
 	/**
+	 * Create the application.
+	 */
+	public Display(){
+		initialize();
+        hilit = new DefaultHighlighter();
+        painter = new DefaultHighlighter.DefaultHighlightPainter(HILIT_COLOR);
+        docTextArea.setHighlighter(hilit);
+
+	}
+
+	public static void copy(File source, File dest) throws IOException {
+	    InputStream is = null;
+	    OutputStream os = null;
+
+	    if(source != null)
+	    {
+	    	try {
+	    		is = new FileInputStream(source);
+	    		os = new FileOutputStream(dest);
+
+	    		int length;
+	    		while ((length = is.read()) > 0) {
+	    			os.write(length);
+	    		}
+	    	} finally {
+	    		is.close();
+	    		os.close();
+	    	}
+	    }
+	}
+
+	/**
 	 * Launch the application.
-	 * @throws UnsupportedLookAndFeelException 
-	 * @throws IllegalAccessException 
-	 * @throws InstantiationException 
-	 * @throws ClassNotFoundException 
+	 * @throws UnsupportedLookAndFeelException
+	 * @throws IllegalAccessException
+	 * @throws InstantiationException
+	 * @throws ClassNotFoundException
 	 */
 	public void createGUI() throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
- 
+
 		UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 
 		EventQueue.invokeLater(new Runnable() {
@@ -106,99 +144,108 @@ public class Display implements DocumentListener {
 					Display window = new Display();
 					window.pirex.setVisible(true);
 
-				
+
 			}
 		});
-	}
-
-	/**
-	 * Create the application.
-	 */
-	public Display() {
-		initialize();
-        hilit = new DefaultHighlighter();
-        painter = new DefaultHighlighter.DefaultHighlightPainter(HILIT_COLOR);
-        docTextArea.setHighlighter(hilit);
-
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
 	public void initialize() {
+		boolean containsData = false;
+
+		for(String s : dir.list())
+            if (s.equals("Data")) {
+                containsData = true;
+                break;
+            }
+
+		if(!containsData) {
+			final URL configFolderURL = getClass().getResource("/Data");
+
+			try {
+				copyJarResourcesRecursively(dir.toPath(), (JarURLConnection) configFolderURL.openConnection());
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+		}
+
+		dataDir = new File(jarDir.getParentFile().getAbsolutePath() + File.separator + "Data");
+		dataDirString = dataDir.getAbsolutePath() + File.separator;
 
 		load();
-		
+
 		pirex = new JFrame();
 		pirex.setTitle("Pirex");
 		pirex.setResizable(false);
-		pirex.setIconImage(Toolkit.getDefaultToolkit().getImage("images/p.png"));
+		pirex.setIconImage(Toolkit.getDefaultToolkit().getImage("/Data/Images/p.png"));
 		pirex.getContentPane().setBackground(Color.WHITE);
 		pirex.setBackground(new Color(0, 0, 0));
 		pirex.setForeground(Color.WHITE);
 		pirex.setBounds(100, 100, 896, 798);
 		pirex.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		pirex.getContentPane().setLayout(null);
-		
+
 		tabs = new JTabbedPane(JTabbedPane.TOP);
 		tabs.setBackground(Color.WHITE);
 		tabs.setBorder(new EmptyBorder(0, 0, 0, 0));
 		tabs.setBounds(0, 0, 797, 800);
 		tabs.setBounds(0, 0, 880, 802);
 		pirex.getContentPane().add(tabs);
-		        
+
 // Code for "Welcome Page"
-		
+
 		JPanel welcome = new JPanel();
 		welcome.setBorder(null);
 		welcome.setBackground(Color.WHITE);
 		welcome.setForeground(Color.WHITE);
-		tabs.addTab("", new ImageIcon("images/pirex.png"), welcome, null);
-		tabs.setDisabledIconAt(0, new ImageIcon("images/pirex.png"));
+		tabs.addTab("", new ImageIcon(dataDirString + "Images/pirex.png"), welcome, null);
+		tabs.setDisabledIconAt(0, new ImageIcon(dataDirString + "Images/pirex.png"));
 		tabs.setEnabledAt(0, false);
 		welcome.setLayout(null);
-		
+
 		JTextPane welcomeText = new JTextPane();
 		welcomeText.setEditable(false);
 		welcomeText.setFont(new Font("Trebuchet MS", Font.BOLD, 30));
 		welcomeText.setText("                      Welcome to Pirex\r\nPlease click on one of the tabs above to begin");
 		welcomeText.setBounds(113, 178, 650, 97);
 		welcome.add(welcomeText);
-				
-//Code for "Search Documents" page
-		
+
+//Code for "Search Data.Documents" page
+
 		JPanel search = new JPanel();
 		search.setForeground(Color.WHITE);
 		search.setBorder(null);
 		search.setBackground(Color.WHITE);
-		tabs.addTab("", new ImageIcon("images/sea iconr.png"), search, "Search For Documents");
+		tabs.addTab("", new ImageIcon(dataDirString + "Images/sea iconr.png"), search, "Search For Data.Documents");
 		tabs.setEnabledAt(1, true);
 		tabs.setBackgroundAt(1, Color.WHITE);
-		
+
 		query = new JTextField();
 		query.getDocument().addDocumentListener(this);
 		query.setBounds(108, 89, 604, 30);
 		query.setColumns(10);
-		
+
 		JScrollPane queryScroll = new JScrollPane();
 		queryScroll.setBounds(62, 141, 630, 204);
 		queryScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		queryScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-		
+
 		JScrollPane docScroll = new JScrollPane();
 		docScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		docScroll.setBounds(33, 388, 813, 311);
 		docScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		
+
 		docTextArea.setWrapStyleWord(true);
 		docTextArea.setLineWrap(true);
 		docTextArea.setEditable(false);
 		docScroll.setViewportView(docTextArea);
-		
+
 		JLabel lblNewLabel = new JLabel("Query:");
 		lblNewLabel.setBounds(44, 93, 45, 19);
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		
+
 		JLabel lblNewLabel_1 = new JLabel("Retrieved Document:");
 		lblNewLabel_1.setBounds(33, 371, 138, 19);
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -206,9 +253,9 @@ public class Display implements DocumentListener {
 		search.add(lblNewLabel);
 		search.add(lblNewLabel_1);
 		search.add(queryScroll);
-		
+
 		queryList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		
+
 		JButton clearButton = new JButton("CLEAR\r\n");
 		clearButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -218,17 +265,17 @@ public class Display implements DocumentListener {
 			}
 		});
 		clearButton.setBounds(718, 93, 94, 23);
-		
+
 		JButton editButton = new JButton("EDIT\r\n");
 		editButton.setBounds(718, 212, 94, 23);
 		editButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-		 		
+
 				if(privilege == 0)
 				{
 					JOptionPane.showMessageDialog(pirex, "Only administrators can edit documents!");
 				}
-		
+
 				else
 				{
 					try {
@@ -239,24 +286,24 @@ public class Display implements DocumentListener {
 				}
 			}
 		});
-		
+
 		JButton deleteButton = new JButton("DELETE");
-		deleteButton.setBounds(718, 270, 94, 23);	
+		deleteButton.setBounds(718, 270, 94, 23);
 		deleteButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-						
+
 				if(privilege == 0)
 				{
 					JOptionPane.showMessageDialog(pirex, "Only administrators can delete documents!");
 				}
-				
+
 				else
 				{
 					deleteFile();
 				}
 			}
 		});
-		
+
 		queryList.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
 				if (queryList.getSelectedIndex() == -1)
@@ -264,7 +311,7 @@ public class Display implements DocumentListener {
 					editButton.setEnabled(false);
 					deleteButton.setEnabled(false);
 				}
-				
+
 				else
 				{
 					editButton.setEnabled(true);
@@ -273,8 +320,8 @@ public class Display implements DocumentListener {
 					docTextArea.setCaretPosition(0);
 					String s = query.getText().toLowerCase();
 					String content = docTextArea.getText().toLowerCase();
-					int index = content.indexOf(s, 0);
-					
+					int index = content.indexOf(s);
+
 					if (index >= 0) {
 			            try {
 			                int end = index + s.length();
@@ -287,7 +334,7 @@ public class Display implements DocumentListener {
 				}
 			}
 		});
-		
+
 		queryList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		queryScroll.setViewportView(queryList);
@@ -301,50 +348,49 @@ public class Display implements DocumentListener {
 		queryPanel.setBackground(Color.WHITE);
 		queryPanel.setBounds(33, 65, 813, 295);
 		search.add(queryPanel);
-		
-		//Code for "Load Documents" page
+
+		//Code for "Load Data.Documents" page
 
 		JPanel load = new JPanel();
 		load.setForeground(Color.WHITE);
 		load.setBorder(null);
 		load.setBackground(Color.WHITE);
-		tabs.addTab("", new ImageIcon("images/ld iconr.png"), load, "Load Documents Section");
-		
-				tabs.setBackgroundAt(2, Color.WHITE);
-		
+		tabs.addTab("", new ImageIcon(dataDirString + "Images/ld iconr.png"), load, "Load Data.Documents Section");
+
+		tabs.setBackgroundAt(2, Color.WHITE);
+
 		JLabel fileLabel = new JLabel("Text File");
 		fileLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
-		
+
 		fileTextField = new JTextField();
 		fileTextField.setColumns(10);
-		
+
 		JLabel titleLabel = new JLabel("Title:");
 		titleLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
-		
+
 		titleTextField = new JTextField();
 		titleTextField.setColumns(10);
-		
+
 		JLabel authorLabel = new JLabel("Author:");
 		authorLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
 		authorLabel.setForeground(new Color(0, 0, 0));
-			
+
 		JScrollPane loadScroll = new JScrollPane();
 		loadScroll.setViewportView(loadText);
-		
+
 		JButton browseButton = new JButton("BROWSE");
 		browseButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+
 				if(privilege == 0)
 				{
 					JOptionPane.showMessageDialog(pirex, "Only administrators can upload documents!");
 				}
-				
+
 				else
 				{
-					fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 					int a = fc.showSaveDialog(null);
-				
+
 					if (a == JFileChooser.APPROVE_OPTION)
 					{
 						fileTextField.setText(fc.getSelectedFile().getAbsolutePath());
@@ -352,21 +398,48 @@ public class Display implements DocumentListener {
 				}
 			}
 		});
-		
-		JButton processButton = new JButton("PROCESS");
-		processButton.addActionListener(new ActionListener() {
+
+		JButton multDocsButton = new JButton("Want to load multiple files?");
+
+		multDocsButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+
 				if(privilege == 0)
 				{
 					JOptionPane.showMessageDialog(pirex, "Only administrators can upload documents!");
 				}
-				
+
 				else
 				{
-					
+					mfc.setMultiSelectionEnabled(true);
+					int a = mfc.showSaveDialog(null);
+
+					if (a == JFileChooser.APPROVE_OPTION)
+					{
 						try {
-							processing();
+							processingMultDocs(mfc.getSelectedFiles());
+						} catch (IOException ex) {
+							throw new RuntimeException(ex);
+						}
+					}
+				}
+			}
+		});
+
+		JButton processButton = new JButton("PROCESS");
+		processButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				if(privilege == 0)
+				{
+					JOptionPane.showMessageDialog(pirex, "Only administrators can upload documents!");
+				}
+
+				else
+				{
+
+						try {
+							processingSingleDoc();
 						} catch (IOException e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
@@ -375,10 +448,10 @@ public class Display implements DocumentListener {
 				}
 			}
 		});
-		
+
 		authorTextField = new JTextField();
 		authorTextField.setColumns(10);
-		
+
 		GroupLayout gl_load = new GroupLayout(load);
 		gl_load.setHorizontalGroup(
 			gl_load.createParallelGroup(Alignment.TRAILING)
@@ -424,42 +497,44 @@ public class Display implements DocumentListener {
 					.addComponent(loadScroll, GroupLayout.PREFERRED_SIZE, 418, GroupLayout.PREFERRED_SIZE)
 					.addContainerGap(123, Short.MAX_VALUE))
 		);
-		
+
 		load.setLayout(gl_load);
-		
-// Code for " Summarize Documents" page
-		
+		multDocsButton.setBounds(340,165,180, 30);
+		load.add(multDocsButton);
+
+// Code for " Summarize Data.Documents" page
+
 		JPanel summarize = new JPanel();
 		summarize.setForeground(Color.WHITE);
 		summarize.setBorder(null);
 		summarize.setBackground(Color.WHITE);
-		tabs.addTab("", new ImageIcon("images/summ iconr1.png"), summarize, "Summarized Document View");
+		tabs.addTab("", new ImageIcon(dataDirString + "Images/summ iconr1.png"), summarize, "Summarized Document View");
 		tabs.setBackgroundAt(3, Color.WHITE);
-		
+
 		JScrollPane summarizeScrollPane = new JScrollPane();
 		summarizeScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		summarizeScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		summarizeScrollPane.setViewportBorder(new LineBorder(new Color(0, 0, 0), 4));
-		
+
 		JButton exportButton = new JButton("Export PirexData To A Directory");
 		exportButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+
 				if(privilege == 0)
 				{
 					JOptionPane.showMessageDialog(pirex, "Only administrators can upload documents!");
 				}
-				
+
 				else
 				{
 					fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 					int a = fc.showSaveDialog(null);
-					
+
 					if (a == JFileChooser.APPROVE_OPTION)
 					{
 						try {
-							copyDirectory(new File("PirexData"), new File(fc.getSelectedFile().getAbsoluteFile()+ "/PirexDataCopy"));
-							JOptionPane.showMessageDialog(null, "PirexData has been copied to " 
+							copyDirectory(new File(dataDirString + "Documents"), new File(fc.getSelectedFile().getAbsoluteFile()+ "/PirexDataCopy"));
+							JOptionPane.showMessageDialog(null, "PirexData has been copied to "
 										+ fc.getSelectedFile().getAbsoluteFile(), "Success!", JOptionPane.INFORMATION_MESSAGE);
 						} catch (IOException e1) {
 							e1.printStackTrace();
@@ -468,7 +543,7 @@ public class Display implements DocumentListener {
 				}
 			}
 		});
-		
+
 		GroupLayout gl_summarize = new GroupLayout(summarize);
 		gl_summarize.setHorizontalGroup(
 			gl_summarize.createParallelGroup(Alignment.TRAILING)
@@ -481,7 +556,7 @@ public class Display implements DocumentListener {
 					.addComponent(exportButton)
 					.addGap(325))
 		);
-		
+
 		gl_summarize.setVerticalGroup(
 			gl_summarize.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_summarize.createSequentialGroup()
@@ -491,7 +566,7 @@ public class Display implements DocumentListener {
 					.addComponent(summarizeScrollPane, GroupLayout.PREFERRED_SIZE, 626, GroupLayout.PREFERRED_SIZE)
 					.addContainerGap(71, Short.MAX_VALUE))
 		);
-		
+
 		summary.setWrapStyleWord(true);
 		summary.setLineWrap(true);
 		summary.setEditable(false);
@@ -501,24 +576,24 @@ public class Display implements DocumentListener {
 		summary.setCaretPosition(0);
 
 //Code for "Help" page
-					
+
 		JPanel help = new JPanel();
 		help.setForeground(Color.WHITE);
 		help.setBorder(null);
 		help.setBackground(Color.WHITE);
-		tabs.addTab("", new ImageIcon("images/help iconr.png"), help, "Need Help?");
+		tabs.addTab("", new ImageIcon(dataDirString + "Images/help iconr.png"), help, "Need Help?");
 		tabs.setEnabledAt(4, true);
-		tabs.setDisabledIconAt(4, new ImageIcon("images/help icong.jpg"));
+		tabs.setDisabledIconAt(4, new ImageIcon(dataDirString + "Images/help iconr.png"));
 		tabs.setBackgroundAt(4, Color.WHITE);
-		
+
 		JScrollPane helpScroll = new JScrollPane();
 		helpScroll.setViewportBorder(new LineBorder(new Color(0, 0, 0), 2, true));
 		helpScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		helpScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		
+
 		JLabel aboutLabel = new JLabel("About / Frequently Asked Questions");
 		aboutLabel.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		
+
 		GroupLayout gl_help = new GroupLayout(help);
 		gl_help.setHorizontalGroup(
 			gl_help.createParallelGroup(Alignment.LEADING)
@@ -540,10 +615,10 @@ public class Display implements DocumentListener {
 					.addComponent(helpScroll, GroupLayout.PREFERRED_SIZE, 485, GroupLayout.PREFERRED_SIZE)
 					.addGap(134))
 		);
-		
+
 		JTextArea helpTextArea = new JTextArea();
 		helpTextArea.setWrapStyleWord(true);
-		helpTextArea.setText("           Pirex is a document retrieval program! It includes the following features: \r\n\r\n\t                              Load Documents\r\n\t                         Edit and Delete Documents\r\n\t                            Search for Documents \r\n\t                           Included Summary Page\r\n\r\n               Pirex was designed and developed by the Scrum Team, We Don't Byte!\r\n\r\n\t\t\t    Credit to the members included below:\r\n                                      Victoria Larson\r\n                                      Oksana Daniliuk\r\n                                        Trevor Blake\r\n                                        Justin Roome\r\n                                       Fernando Ramos\r\n                                        Hartej Singh\r\n                                       Amanjot Singh\r\n                                      Ganesh Renukunta\r\n\r\n----------------------------------------------------------------------------------------------\r\n\r\n* How to SEARCH For Documents in Pirex: *\r\n\r\nTo search for a document in Pirex, follow the following steps:\r\n\r\n1. Click the \"SEARCH\" Navigational Tab at the top of the screen.\r\n\r\n2. Type the title or the author of the desired document in the text box next to \"Query\".\r\n\r\n3. Press \"Enter\" on your keyboard.\r\n\r\n4. A list of documents with that same author or similar title will show up in the display text box.\r\n\r\nFor a New Search:\r\n\r\n1. Press the \"CLEAR\" button at the top of the page next to the fillable search box.\r\n\r\n----------------------------------------------------------------------------------------------\r\n\r\n* How to LOAD Documents into Pirex: *\r\n\r\nTo load a document in Pirex, follow the following steps:\r\n\r\n1. Click the \"LOAD\" Navigational Tab at the top of the screen.\r\n\r\n2. Click the \"BROWSE\" button towards the top of the screen, beneath the Navigational Tabs.\r\n\r\n3. A file explorer window will appear. Locate and select the desired text document.\r\n\r\n4. Click \"Save\".\r\n\r\n5. The filepath of the selected document should now appear in the text box next to the \"BROWSE\" button.\r\n\r\n6. Type the title and author of the selected document into the respective fillable text boxes.\r\n\r\n7. Click the \"PROCESS\" button, next to the \"Author\" text box.\r\n\r\n8. The display text box at the bottom half of the window will show the document being processed.\r\n\r\n9. Once the display text box shows the words \"Uploaded Successfully!\", the file is now in the Pirex database.\r\n\r\n----------------------------------------------------------------------------------------------\r\n\r\n* How to EDIT Documents in Pirex: *\r\n\r\nTo edit a document in Pirex, follow the following steps:\r\n\r\n1. Make sure you've logged into Pirex with your Admin credentials to gain Admin privileges.\r\n\r\n2. Click the \"SEARCH\" tab at the top of the screen.\r\n\r\n3. Type the title or the author of the desired document in the text box next to \"Query\".\r\n\r\n4. Press \"Enter\" on your keyboard.\r\n\r\n5. A list of documents with that same author or similar title will show up in the display text box.\r\n\r\n6. Select the desired document from the search results by clicking on it.\r\n\r\n7. The document will be opned in your default text editor\r\n\r\n8. Make your changes.\r\n\r\nTo Save the Changes in Pirex:\r\n\r\n1. In your text editor, click \"File\".\r\n\r\n2. Click \"Save\", not \"Save As\".\r\n\r\n3. The document will be updated in Pirex. \r\n\r\n----------------------------------------------------------------------------------------------\r\n\r\n* How to REMOVE Documents in Pirex: *\r\n\r\nTo remove document from Pirex, follow the following steps:\r\n\r\n1. Make sure you've logged into Pirex with your Admin credentials to gain Admin privileges.\r\n\r\n2. Click the \"SEARCH\" tab at the top of the screen.\r\n\r\n3. Type the title or the author of the desired document in the text box next to \"Query\".\r\n\r\n4. Press \"Enter\" on your keyboard.\r\n\r\n5. A list of documents with that same author or similar title will show up in the display text box.\r\n\r\n6. Select the desired document from the search results by clicking on it.\r\n\r\n7. Click the \"DELETE\" button to the right of the search results box, under the \"EDIT\" button.\r\n\r\n8. The document you had selected will now be removed from the Pirex database, and will no longer show up in search results.\r\n\r\n----------------------------------------------------------------------------------------------\r\n");
+		helpTextArea.setText("           Pirex is a document retrieval program! It includes the following features: \r\n\r\n\t                              Load Data.Documents\r\n\t                         Edit and Delete Data.Documents\r\n\t                            Search for Data.Documents \r\n\t                           Included Summary Page\r\n\r\n               Pirex was designed and developed by the Scrum Team, We Don't Byte!\r\n\r\n\t\t\t    Credit to the members included below:\r\n                                      Victoria Larson\r\n                                      Oksana Daniliuk\r\n                                        Trevor Blake\r\n                                        Justin Roome\r\n                                       Fernando Ramos\r\n                                        Hartej Singh\r\n                                       Amanjot Singh\r\n                                      Ganesh Renukunta\r\n\r\n----------------------------------------------------------------------------------------------\r\n\r\n* How to SEARCH For Data.Documents in Pirex: *\r\n\r\nTo search for a document in Pirex, follow the following steps:\r\n\r\n1. Click the \"SEARCH\" Navigational Tab at the top of the screen.\r\n\r\n2. Type the title or the author of the desired document in the text box next to \"Query\".\r\n\r\n3. Press \"Enter\" on your keyboard.\r\n\r\n4. A list of documents with that same author or similar title will show up in the display text box.\r\n\r\nFor a New Search:\r\n\r\n1. Press the \"CLEAR\" button at the top of the page next to the fillable search box.\r\n\r\n----------------------------------------------------------------------------------------------\r\n\r\n* How to LOAD Data.Documents into Pirex: *\r\n\r\nTo load a document in Pirex, follow the following steps:\r\n\r\n1. Click the \"LOAD\" Navigational Tab at the top of the screen.\r\n\r\n2. Click the \"BROWSE\" button towards the top of the screen, beneath the Navigational Tabs.\r\n\r\n3. A file explorer window will appear. Locate and select the desired text document.\r\n\r\n4. Click \"Save\".\r\n\r\n5. The filepath of the selected document should now appear in the text box next to the \"BROWSE\" button.\r\n\r\n6. Type the title and author of the selected document into the respective fillable text boxes.\r\n\r\n7. Click the \"PROCESS\" button, next to the \"Author\" text box.\r\n\r\n8. The display text box at the bottom half of the window will show the document being processed.\r\n\r\n9. Once the display text box shows the words \"Uploaded Successfully!\", the file is now in the Pirex database.\r\n\r\n----------------------------------------------------------------------------------------------\r\n\r\n* How to EDIT Data.Documents in Pirex: *\r\n\r\nTo edit a document in Pirex, follow the following steps:\r\n\r\n1. Make sure you've logged into Pirex with your Admin credentials to gain Admin privileges.\r\n\r\n2. Click the \"SEARCH\" tab at the top of the screen.\r\n\r\n3. Type the title or the author of the desired document in the text box next to \"Query\".\r\n\r\n4. Press \"Enter\" on your keyboard.\r\n\r\n5. A list of documents with that same author or similar title will show up in the display text box.\r\n\r\n6. Select the desired document from the search results by clicking on it.\r\n\r\n7. The document will be opned in your default text editor\r\n\r\n8. Make your changes.\r\n\r\nTo Save the Changes in Pirex:\r\n\r\n1. In your text editor, click \"File\".\r\n\r\n2. Click \"Save\", not \"Save As\".\r\n\r\n3. The document will be updated in Pirex. \r\n\r\n----------------------------------------------------------------------------------------------\r\n\r\n* How to REMOVE Data.Documents in Pirex: *\r\n\r\nTo remove document from Pirex, follow the following steps:\r\n\r\n1. Make sure you've logged into Pirex with your Admin credentials to gain Admin privileges.\r\n\r\n2. Click the \"SEARCH\" tab at the top of the screen.\r\n\r\n3. Type the title or the author of the desired document in the text box next to \"Query\".\r\n\r\n4. Press \"Enter\" on your keyboard.\r\n\r\n5. A list of documents with that same author or similar title will show up in the display text box.\r\n\r\n6. Select the desired document from the search results by clicking on it.\r\n\r\n7. Click the \"DELETE\" button to the right of the search results box, under the \"EDIT\" button.\r\n\r\n8. The document you had selected will now be removed from the Pirex database, and will no longer show up in search results.\r\n\r\n----------------------------------------------------------------------------------------------\r\n");
 		helpTextArea.setEditable(false);
 		helpTextArea.setLineWrap(true);
 		helpScroll.setViewportView(helpTextArea);
@@ -551,53 +626,108 @@ public class Display implements DocumentListener {
 		help.setLayout(gl_help);
 	}
 
-	public void processing() throws IOException
+	public void processingSingleDoc() throws IOException
 	{
 		String file = fileTextField.getText();
 		String title = titleTextField.getText();
 		String author = authorTextField.getText();
-		String date = new SimpleDateFormat("HH:mm MM-dd-yyy").format(new Date());
+		String date = new SimpleDateFormat("HH:mm MM-dd-yyyy").format(new Date());
 
-	    File a = new File("PirexData/" + title + ".txt");
+	    File a = new File(dataDirString + "Documents/" + title + ".txt");
 	    a.createNewFile();
 	    copy(new File(file), a);
 
-		docs.add(new Doc(title, author, date));
-		loadText.setText("");
-		loadInfo.add("File: ");
-		loadInfo.add(file);
-		loadInfo.add("\r\nTitle: ");
-		loadInfo.add(title);
-		loadInfo.add("\r\nAuthor: ");
-		loadInfo.add(author);
-		loadInfo.add("\r\nDate Uploaded: ");
-		loadInfo.add(date);
-		info(loadInfo);
-		loadTimer(loadInfo);
-		summary.setText(summaryText(docs));
-		summary.setCaretPosition(0);
-		save();
+		Doc temp = new Doc(title, author, date, dataDirString + "Documents/" + title + ".txt");
+
+		boolean exists = false;
+		for (Doc doc : docs) {
+            if (doc.getText().equals(temp.getText())) {
+                exists = true;
+                break;
+            }
+		}
+
+		if(exists)
+		{
+			loadInfo.add("File \"" + title + "\" already exists in the database. \r\n\r\n");
+			loadTimer(loadInfo);
+		}
+
+		else
+		{
+			docs.add(temp);
+			loadText.setText("");
+			loadInfo.add("File: ");
+			loadInfo.add(file);
+			loadInfo.add("\r\nTitle: ");
+			loadInfo.add(title);
+			loadInfo.add("\r\nAuthor: ");
+			loadInfo.add(author);
+			loadInfo.add("\r\nDate Uploaded: ");
+			loadInfo.add(date);
+			info(loadInfo, title);
+			loadTimer(loadInfo);
+			summary.setText(summaryText(docs));
+			summary.setCaretPosition(0);
+			save();
+		}
 	}
 	
-	public static void copy(File source, File dest) throws IOException {
-	    InputStream is = null;
-	    OutputStream os = null;
-	    
-	    if(source != null)
-	    {
-	    	try {
-	    		is = new FileInputStream(source);
-	    		os = new FileOutputStream(dest);
+	public void processingMultDocs(File[] selectedFiles) throws IOException
+	{
+		for(File file: selectedFiles)
+		{
+			int j = file.getName().lastIndexOf('.');
+			String fileExtension = "";
+			String title = file.getName().substring(0,j);
+			String author = "N/A";
+			String date = new SimpleDateFormat("HH:mm MM-dd-yyyy").format(new Date());
 
-	    		int length;
-	    		while ((length = is.read()) > 0) {
-	    			os.write(length);
-	    		}
-	    	} finally {
-	    		is.close();
-	    		os.close();
-	    	}
-	    }
+			if(j > 0)
+				fileExtension = file.getName().substring(j+1);
+
+			if(fileExtension.equals("txt"))
+			{
+				File a = new File(dataDirString + "Documents/" + title + ".txt");
+				a.createNewFile();
+				copy(new File(file.getAbsolutePath()), a);
+			}
+
+			Doc temp = new Doc(title, author, date, dataDirString + "Documents/" + title + ".txt");
+			boolean exists = false;
+            for (Doc doc : docs) {
+                if (doc.getText().equals(temp.getText())) {
+                    exists = true;
+                    break;
+                }
+            }
+
+			if(exists)
+			{
+				loadInfo.add("File \"" + title + "\" already exists in the database. \r\n\r\n");
+				loadTimer(loadInfo);
+			}
+
+			else
+			{
+				docs.add(temp);
+				loadText.setText("");
+				loadInfo.add("File: ");
+				loadInfo.add(file.getAbsolutePath());
+				loadInfo.add("\r\nTitle: ");
+				loadInfo.add(title);
+				loadInfo.add("\r\nAuthor: ");
+				loadInfo.add(author);
+				loadInfo.add("\r\nDate Uploaded: ");
+				loadInfo.add(date);
+				info(loadInfo, title);
+				loadTimer(loadInfo);
+			}
+		}
+		save();
+		summary.setText(summaryText(docs));
+		summary.setCaretPosition(0);
+
 	}
 	
 	public void copyDirectory(File sourceLocation , File targetLocation)
@@ -633,7 +763,7 @@ public class Display implements DocumentListener {
 	
 	public void load()
 	{
-		File documents = new File("documents.txt");
+		File documents = new File(dataDir, "documents.txt");
 		Scanner d;
 		try {
 			d = new Scanner(documents);
@@ -645,11 +775,9 @@ public class Display implements DocumentListener {
 				String title = st.nextToken();
 				String author = st.nextToken();
 				String date = st.nextToken();
-				Path path = Paths.get("PirexData/" + title + ".txt");			
-				if(Files.exists(path)) 
-				{ 
-					docs.add(new Doc(title, author, date));
-				}
+				Path path = Paths.get(dataDirString + "Documents/" + title + ".txt");
+				if(Files.exists(path))
+					docs.add(new Doc(title, author, date, path.toString()));
 
 			}
 			
@@ -666,7 +794,7 @@ public class Display implements DocumentListener {
 	{
 		FileWriter myWriter;
 		try {
-			myWriter = new FileWriter("documents.txt", false);
+			myWriter = new FileWriter(dataDirString + "documents.txt", false);
 			
 			for(int i = 0; i < docs.size(); i++)
 			{
@@ -712,8 +840,7 @@ public class Display implements DocumentListener {
 				}
 				else
 				{
-				timer.stop();
-
+					timer.stop();
 				}
 			}
 		};
@@ -722,13 +849,13 @@ public class Display implements DocumentListener {
 		timer.start();
 	}
 	
-	public void info(ArrayList<String> loadInfo)
+	public void info(ArrayList<String> loadInfo, String title)
 	{
     	loadInfo.add("\r\nUploading Document To Pirex Database");
     	addDots(2);
     	loadInfo.add(".\r\n");
     	addDots(21);
-    	loadInfo.add("\r\n" + loadInfo.get(3) + " Uploaded Successfully!");
+    	loadInfo.add("\r\n" + title + " Uploaded Successfully!" + "\r\n\r\n");
 	}
 	
 	public void addDots(int x)
@@ -768,13 +895,12 @@ public class Display implements DocumentListener {
 	
 	public void editFile() throws IOException {
 		int selectedIndex = queryList.getSelectedIndex();
+		int selectedIndexTemp = selectedIndex;
 		int indexNeeded = 0;
 		for(int i = 0; i < docs.size(); i++)
 		{
 			if(docs.get(i).shortForm(query.getText()).equals(queryList.getSelectedValue()))
-			{
-				indexNeeded = i;
-			}
+                indexNeeded = i;
 		}
 		
 		if (selectedIndex != -1) {
@@ -786,6 +912,24 @@ public class Display implements DocumentListener {
             if (n == 0 || n == JOptionPane.CLOSED_OPTION)
             {
             	save();
+				search();
+
+				queryList.setSelectedIndex(selectedIndexTemp);
+				docTextArea.setText(keyDocsArr[selectedIndexTemp].toString());
+				docTextArea.setCaretPosition(0);
+				String s = query.getText().toLowerCase();
+				String content = docTextArea.getText().toLowerCase();
+				int index = content.indexOf(s);
+
+				if (index >= 0) {
+					try {
+						int end = index + s.length();
+						hilit.addHighlight(index, end, painter);
+						docTextArea.setCaretPosition(end);
+					} catch (BadLocationException e1) {
+						e1.printStackTrace();
+					}
+				}
             }
         }
 	}
@@ -821,6 +965,23 @@ public class Display implements DocumentListener {
 		}
 		
 		
+	}
+
+	private void copyJarResourcesRecursively(Path destination, JarURLConnection jarConnection) throws IOException {
+		JarFile jarFile = jarConnection.getJarFile();
+		Iterator<JarEntry> it;
+		for (it = jarFile.entries().asIterator(); it.hasNext();) {
+			JarEntry entry = it.next();
+			if (entry.getName().startsWith(jarConnection.getEntryName())) {
+				if (!entry.isDirectory()) {
+					try (InputStream entryInputStream = jarFile.getInputStream(entry)) {
+						Files.copy(entryInputStream, Paths.get(destination.toString(), entry.getName()));
+					}
+				} else {
+					Files.createDirectories(Paths.get(destination.toString(), entry.getName()));
+				}
+			}
+		}
 	}
 
 	@Override

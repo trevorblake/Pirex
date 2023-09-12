@@ -1,4 +1,4 @@
-package Data;
+package Pirex;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -10,21 +10,21 @@ import java.util.Scanner;
 
 public class Doc 
 {
-	private String title;
-	private String author;
-	private String date;
-	private String location;
+	private final String title;
+	private final String author;
+	private final String date;
+	private final String location;
 	private String text;
 	Scanner scan;
     
     
-    public Doc(String title, String author, String date) throws FileNotFoundException
+    public Doc(String title, String author, String date, String location) throws FileNotFoundException
     {
     	this.title = title;
     	this.author = author;
     	this.date = date;
-    	this.location = "PirexData/" + title + ".txt";
-    	this.text = formText();   	
+    	this.location = location;
+    	this.text = formText();
     }
     
     public String getTitle()
@@ -73,7 +73,7 @@ public class Doc
     public String shortForm(String keyword) // formatting for short form displays
     {
     	String s = "";
-    	ArrayList<String> sub = new ArrayList<String>(); 
+    	ArrayList<String> sub = new ArrayList<String>();
     	String textFix = text.replaceAll("\\R+", " ").replaceAll("  ", " ");
     	String[] keys = keyword.split(" ");
     	String[] textArr = textFix.split(" ");
@@ -90,7 +90,7 @@ public class Doc
     		{
     			if(textList.get(i).toLowerCase().contains(keys[j].toLowerCase()))
     			{
-    				index += Integer.toString(i) + " ";
+    				index += i + " ";
     				j++;
     			}
     			

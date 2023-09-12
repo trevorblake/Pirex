@@ -1,6 +1,6 @@
 package Display;
 
-import Data.User;
+import Pirex.User;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -99,7 +99,7 @@ public final class Login extends JFrame implements ActionListener {
         container.add(resetButton);
         
         JLabel pireximage = new JLabel("");
-        pireximage.setIcon(new ImageIcon("images/pirex.png"));
+        pireximage.setIcon(new ImageIcon("Data/Images/pirex.png"));
         pireximage.setBounds(107, 11, 140, 74);
         getContentPane().add(pireximage);
         lblNewLabel.setBounds(102, 83, 130, 47);
@@ -174,7 +174,7 @@ public final class Login extends JFrame implements ActionListener {
 
     public void createLogin() {
 
-        frame.setIconImage(Toolkit.getDefaultToolkit().getImage("images/p.png"));
+        frame.setIconImage(Toolkit.getDefaultToolkit().getImage("Data/Images/p.png"));
         frame.setTitle("Pirex");
         frame.setVisible(true);
         frame.setBounds(10, 10, 371, 411);

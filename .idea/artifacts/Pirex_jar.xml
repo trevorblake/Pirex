@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="Pirex:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Pirex_jar</output-path>
+    <root id="archive" name="Pirex.jar">
+      <element id="module-output" name="Pirex" />
+      <element id="directory" name="Data">
+        <element id="dir-copy" path="$PROJECT_DIR$/Data" />
+      </element>
+    </root>
+  </artifact>
+</component>

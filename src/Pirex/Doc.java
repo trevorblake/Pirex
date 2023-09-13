@@ -1,7 +1,14 @@
 package Pirex;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import org.apache.tika.exception.TikaException;
+import org.apache.tika.metadata.Metadata;
+import org.apache.tika.parser.AutoDetectParser;
+import org.apache.tika.sax.BodyContentHandler;
+import org.xml.sax.SAXException;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
@@ -18,13 +25,16 @@ public class Doc
 	Scanner scan;
     
     
-    public Doc(String title, String author, String date, String location) throws FileNotFoundException
-    {
+    public Doc(String title, String author, String date, String location) {
     	this.title = title;
     	this.author = author;
     	this.date = date;
     	this.location = location;
-    	this.text = formText();
+		try {
+			this.text = formText();
+		} catch (IOException | TikaException e) {
+			throw new RuntimeException(e);
+		}
     }
     
     public String getTitle()
@@ -53,21 +63,19 @@ public class Doc
     	return this.text;
     }
     
-    public String formText() throws FileNotFoundException
-    {	
-    	this.text = "";
-    	
+    public String formText() throws IOException, TikaException {
+		AutoDetectParser parser = new AutoDetectParser();
+		BodyContentHandler handler = new BodyContentHandler();
+		Metadata metadata = new Metadata();
 
-        scan = new Scanner(new File(this.location));
-
-    	
-    	while(scan.hasNext())
-    	{
-    			this.text += scan.nextLine() + "\r\n";
-    	}
-        scan.close();
-        
-        return this.text;       
+		try (InputStream stream = new FileInputStream(this.location)) {
+			try {
+				parser.parse(stream, handler, metadata);
+			} catch (IOException | SAXException | TikaException e) {
+				throw new RuntimeException(e);
+			}
+            return handler.toString();
+		}
     }
     
     public String shortForm(String keyword) // formatting for short form displays

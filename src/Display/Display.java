@@ -1,43 +1,25 @@
 package Display;
 
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
-import javax.swing.JLabel;
-import javax.swing.Timer;
-import java.awt.Color;
-import java.awt.Font;
-import javax.swing.JTextArea;
-import javax.swing.ImageIcon;
-import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.JTextPane;
-import javax.swing.JFileChooser;
-import javax.swing.border.EmptyBorder;
-import javax.swing.DefaultListModel;
-import java.awt.Toolkit;
 import Pirex.Doc;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.JTextField;
-import javax.swing.JButton;
+import org.apache.tika.exception.TikaException;
+
+import javax.swing.*;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.Timer;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
-import javax.swing.ListSelectionModel;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultHighlighter;
+import javax.swing.text.Highlighter;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.*;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
@@ -45,17 +27,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultHighlighter;
-import javax.swing.text.Highlighter;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.event.ListSelectionEvent;
 
 
 public class Display implements DocumentListener {
@@ -73,7 +46,6 @@ public class Display implements DocumentListener {
 	public JTextField authorTextField;
 	public JTextArea loadText = new JTextArea();
 	public JTextArea summary = new JTextArea();
-	public int index = 0;
 	public Timer timer;
 	public JTextField query;
 	public JFileChooser fc = new JFileChooser();
@@ -88,12 +60,16 @@ public class Display implements DocumentListener {
 	public Doc[] keyDocsArr;
 	public boolean timerRunning;
 	public int choice;
+	public int nextIndex;
+	public int currentIndex;
+	public int index;
 	File jarDir = new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
 	File dir = new File(jarDir.getParentFile().getAbsolutePath());
 	File dataDir;
 	String dataDirString;
 	JTextArea docTextArea = new JTextArea();
-	
+	public int loadIndex = 0;
+
 	/**
 	 * Create the application.
 	 */
@@ -266,20 +242,20 @@ public class Display implements DocumentListener {
 		});
 		clearButton.setBounds(718, 93, 94, 23);
 
-		JButton editButton = new JButton("EDIT\r\n");
-		editButton.setBounds(718, 212, 94, 23);
-		editButton.addActionListener(new ActionListener() {
+		JButton openButton = new JButton("OPEN\r\n");
+		openButton.setBounds(718, 154, 94, 23);
+		openButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
 				if(privilege == 0)
 				{
-					JOptionPane.showMessageDialog(pirex, "Only administrators can edit documents!");
+					JOptionPane.showMessageDialog(pirex, "Only administrators can open documents!");
 				}
 
 				else
 				{
 					try {
-						editFile();
+						openFile();
 					} catch (IOException e1) {
 						e1.printStackTrace();
 					}
@@ -288,7 +264,7 @@ public class Display implements DocumentListener {
 		});
 
 		JButton deleteButton = new JButton("DELETE");
-		deleteButton.setBounds(718, 270, 94, 23);
+		deleteButton.setBounds(718, 212, 94, 23);
 		deleteButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
@@ -304,23 +280,53 @@ public class Display implements DocumentListener {
 			}
 		});
 
+		JButton nextButton = new JButton("NEXT");
+		nextButton.setBounds(718, 270, 94, 23);
+		nextButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				docTextArea.setText(keyDocsArr[queryList.getSelectedIndex()].toString());
+				docTextArea.setCaretPosition(0);
+				String s = query.getText().toLowerCase();
+				String content = docTextArea.getText().toLowerCase();
+				nextIndex = index + s.length();
+				index = content.indexOf(s, nextIndex);
+
+				if(index == -1) {
+					index = content.indexOf(s);
+				}
+				if (index >= 0) {
+					try {
+						int end = index + s.length();
+						hilit.addHighlight(index, end, painter);
+						docTextArea.setCaretPosition(end);
+					} catch (BadLocationException e1) {
+						e1.printStackTrace();
+					}
+				}
+			}
+		});
+
 		queryList.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
 				if (queryList.getSelectedIndex() == -1)
 				{
-					editButton.setEnabled(false);
+					openButton.setEnabled(false);
 					deleteButton.setEnabled(false);
+					nextButton.setEnabled(false);
+					docTextArea.setText("");
 				}
 
 				else
 				{
-					editButton.setEnabled(true);
+					openButton.setEnabled(true);
 					deleteButton.setEnabled(true);
+					nextButton.setEnabled(true);
 					docTextArea.setText(keyDocsArr[queryList.getSelectedIndex()].toString());
 					docTextArea.setCaretPosition(0);
 					String s = query.getText().toLowerCase();
 					String content = docTextArea.getText().toLowerCase();
-					int index = content.indexOf(s);
+					index = content.indexOf(s);
 
 					if (index >= 0) {
 			            try {
@@ -341,7 +347,8 @@ public class Display implements DocumentListener {
 		search.add(query);
 		search.add(deleteButton);
 		search.add(clearButton);
-		search.add(editButton);
+		search.add(openButton);
+		search.add(nextButton);
 		search.add(docScroll);
 		JPanel queryPanel = new JPanel();
 		queryPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -359,7 +366,7 @@ public class Display implements DocumentListener {
 
 		tabs.setBackgroundAt(2, Color.WHITE);
 
-		JLabel fileLabel = new JLabel("Text File");
+		JLabel fileLabel = new JLabel("File");
 		fileLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
 
 		fileTextField = new JTextField();
@@ -443,9 +450,11 @@ public class Display implements DocumentListener {
 						} catch (IOException e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
-						}
+						} catch (TikaException ex) {
+                            throw new RuntimeException(ex);
+                        }
 
-				}
+                }
 			}
 		});
 
@@ -499,6 +508,7 @@ public class Display implements DocumentListener {
 		);
 
 		load.setLayout(gl_load);
+
 		multDocsButton.setBounds(340,165,180, 30);
 		load.add(multDocsButton);
 
@@ -626,18 +636,32 @@ public class Display implements DocumentListener {
 		help.setLayout(gl_help);
 	}
 
-	public void processingSingleDoc() throws IOException
-	{
-		String file = fileTextField.getText();
-		String title = titleTextField.getText();
+	public void processingSingleDoc() throws IOException, TikaException {
+
+		File file = new File(fileTextField.getText());
+		String extension = file.getName().substring(file.getName().indexOf('.'));
+		String title = titleTextField.getText() + extension;
 		String author = authorTextField.getText();
 		String date = new SimpleDateFormat("HH:mm MM-dd-yyyy").format(new Date());
+		loadIndex = 0;
+		loadInfo.clear();
 
-	    File a = new File(dataDirString + "Documents/" + title + ".txt");
-	    a.createNewFile();
-	    copy(new File(file), a);
+		try
+		{
+			FileInputStream fs = new FileInputStream(file.getAbsolutePath());
+			FileOutputStream os = new FileOutputStream(dataDirString + "Documents/" + title);
+			int b;
+			while ((b = fs.read()) != -1)
+			{
+				os.write(b);
+			}
+			os.close();
+			fs.close();
+		} catch (Exception E) {
+			E.printStackTrace();
+		}
 
-		Doc temp = new Doc(title, author, date, dataDirString + "Documents/" + title + ".txt");
+		Doc temp = new Doc(title, author, date, dataDirString + "Documents/" + title);
 
 		boolean exists = false;
 		for (Doc doc : docs) {
@@ -658,7 +682,7 @@ public class Display implements DocumentListener {
 			docs.add(temp);
 			loadText.setText("");
 			loadInfo.add("File: ");
-			loadInfo.add(file);
+			loadInfo.add(file.getAbsolutePath());
 			loadInfo.add("\r\nTitle: ");
 			loadInfo.add(title);
 			loadInfo.add("\r\nAuthor: ");
@@ -675,26 +699,33 @@ public class Display implements DocumentListener {
 	
 	public void processingMultDocs(File[] selectedFiles) throws IOException
 	{
+		loadIndex = 0;
+		loadInfo.clear();
+
 		for(File file: selectedFiles)
 		{
-			int j = file.getName().lastIndexOf('.');
-			String fileExtension = "";
-			String title = file.getName().substring(0,j);
+			String title = file.getName();
 			String author = "N/A";
 			String date = new SimpleDateFormat("HH:mm MM-dd-yyyy").format(new Date());
 
-			if(j > 0)
-				fileExtension = file.getName().substring(j+1);
-
-			if(fileExtension.equals("txt"))
+			try
 			{
-				File a = new File(dataDirString + "Documents/" + title + ".txt");
-				a.createNewFile();
-				copy(new File(file.getAbsolutePath()), a);
+				FileInputStream fs = new FileInputStream(file.getAbsolutePath());
+				FileOutputStream os = new FileOutputStream(dataDirString + "Documents/" + title);
+				int b;
+				while ((b = fs.read()) != -1)
+				{
+					os.write(b);
+				}
+				os.close();
+				fs.close();
+			} catch (Exception E) {
+				E.printStackTrace();
 			}
 
-			Doc temp = new Doc(title, author, date, dataDirString + "Documents/" + title + ".txt");
+			Doc temp = new Doc(title, author, date, dataDirString + "Documents/" + title);
 			boolean exists = false;
+
             for (Doc doc : docs) {
                 if (doc.getText().equals(temp.getText())) {
                     exists = true;
@@ -775,7 +806,7 @@ public class Display implements DocumentListener {
 				String title = st.nextToken();
 				String author = st.nextToken();
 				String date = st.nextToken();
-				Path path = Paths.get(dataDirString + "Documents/" + title + ".txt");
+				Path path = Paths.get(dataDirString + "Documents/" + title);// + ".txt");
 				if(Files.exists(path))
 					docs.add(new Doc(title, author, date, path.toString()));
 
@@ -833,10 +864,10 @@ public class Display implements DocumentListener {
 	{
 		ActionListener actionListener = new ActionListener() {
 			public void actionPerformed(ActionEvent av) {
-				if (index < loadInfo.size())
+				if (loadIndex < loadInfo.size())
 				{
-					loadText.append(loadInfo.get(index));
-					index++;
+					loadText.append(loadInfo.get(loadIndex));
+					loadIndex++;
 				}
 				else
 				{
@@ -889,11 +920,12 @@ public class Display implements DocumentListener {
 				file.delete();
 				save();
 				JOptionPane.showMessageDialog(pirex, "Document successfully deleted");
+				search();
 			}
 		}
 	}
 	
-	public void editFile() throws IOException {
+	public void openFile() throws IOException {
 		int selectedIndex = queryList.getSelectedIndex();
 		int selectedIndexTemp = selectedIndex;
 		int indexNeeded = 0;
@@ -905,7 +937,7 @@ public class Display implements DocumentListener {
 		
 		if (selectedIndex != -1) {
             File file = new File(docs.get(indexNeeded).getLocation());
-            java.awt.Desktop.getDesktop().edit(file);
+            java.awt.Desktop.getDesktop().open(file);
             Object[] options = {"OK"};
             int n = JOptionPane.showOptionDialog(pirex,"Click OK when after saving the document.", "Finished Editing?", JOptionPane.PLAIN_MESSAGE, JOptionPane.QUESTION_MESSAGE, null, options, null);
 
@@ -919,7 +951,6 @@ public class Display implements DocumentListener {
 				docTextArea.setCaretPosition(0);
 				String s = query.getText().toLowerCase();
 				String content = docTextArea.getText().toLowerCase();
-				int index = content.indexOf(s);
 
 				if (index >= 0) {
 					try {
@@ -997,8 +1028,5 @@ public class Display implements DocumentListener {
 	@Override
 	public void changedUpdate(DocumentEvent e) {
 		// TODO Auto-generated method stub
-		
 	}
-	
 }
-
